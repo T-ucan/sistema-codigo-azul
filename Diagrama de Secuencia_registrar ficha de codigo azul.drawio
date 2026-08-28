@@ -1,0 +1,160 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Secuencia - Registrar Ficha de Código Azul" id="seq-registrar-ficha-ca-v2">
+    <mxGraphModel dx="1471" dy="940" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="880" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;fontSize=16;fontStyle=1;align=left;" value="Diagrama de Secuencia — Registrar Ficha de Código Azul (carga manual)" vertex="1">
+          <mxGeometry height="28" width="1170" x="30" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;fontSize=10;fontStyle=2;align=left;fontColor=#666666;" value="Sin activación automática ni hardware: el encargado carga el registro después de ocurrido el evento." vertex="1">
+          <mxGeometry height="20" width="1170" x="30" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="actorEncargado" parent="1" style="shape=actor;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;" value=":EncargadoDeÁrea" vertex="1">
+          <mxGeometry height="60" width="40" x="90" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrPantalla" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=11;align=center;verticalAlign=middle;" value="«boundary»&lt;br&gt;&lt;b&gt;:PantallaCargaFichaCA&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="260" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrControlador" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;fontSize=11;align=center;verticalAlign=middle;" value="«control»&lt;br&gt;&lt;b&gt;:ControladorFichas&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="530" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrCodigoAzul" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=11;align=center;verticalAlign=middle;" value="«entity»&lt;br&gt;&lt;b&gt;:CodigoAzul&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="760" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="hdrRepositorio" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#000000;fontSize=11;align=center;verticalAlign=middle;" value="«adapter»&lt;br&gt;&lt;b&gt;:RepositorioFichas&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="990" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="ll_actor" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="110" y="200" as="sourcePoint" />
+            <mxPoint x="110" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_pantalla" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="200" as="sourcePoint" />
+            <mxPoint x="350" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_controlador" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="200" as="sourcePoint" />
+            <mxPoint x="620" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_repositorio" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1080" y="200" as="sourcePoint" />
+            <mxPoint x="1080" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_codigoazul" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="850" y="480" as="sourcePoint" />
+            <mxPoint x="850" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="actFrame" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#000000;fontSize=11;fontStyle=1;verticalAlign=top;align=left;spacingLeft=6;spacingTop=4;" value="alt" vertex="1">
+          <mxGeometry height="320" width="870" x="280" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="guardOk" parent="1" style="text;html=1;fontSize=10;fontStyle=2;align=left;" value="[datos completos y válidos]" vertex="1">
+          <mxGeometry height="20" width="260" x="390" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="altDivider" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#000000;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="655" as="sourcePoint" />
+            <mxPoint x="1150" y="655" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="guardBad" parent="1" style="text;html=1;fontSize=10;fontStyle=2;align=left;" value="[datos incompletos o inválidos]" vertex="1">
+          <mxGeometry height="20" width="300" x="390" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="actPantalla1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="10" x="345" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="actPantalla2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="430" width="10" x="345" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="actControlador" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="320" width="10" x="615" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="actCodigoAzul" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="10" x="845" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="actRepositorio" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="10" x="1075" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="abrirFormularioCargaFicha()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="110" y="250" as="sourcePoint" />
+            <mxPoint x="345" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="formulario vacío">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="290" as="sourcePoint" />
+            <mxPoint x="110" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="completarYEnviarFormulario(datos)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="110" y="340" as="sourcePoint" />
+            <mxPoint x="345" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="registrarFichaCodigoAzul(datos)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="355" y="380" as="sourcePoint" />
+            <mxPoint x="615" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5" edge="1" parent="1" style="endArrow=block;endFill=1;dashed=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="«create»">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="625" y="430" as="sourcePoint" />
+            <mxPoint x="760" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m6" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="instancia creada">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="845" y="520" as="sourcePoint" />
+            <mxPoint x="625" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="guardar(ficha)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="625" y="560" as="sourcePoint" />
+            <mxPoint x="1075" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="confirmación">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1075" y="600" as="sourcePoint" />
+            <mxPoint x="625" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="éxito">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="615" y="640" as="sourcePoint" />
+            <mxPoint x="355" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="error de validación">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="615" y="700" as="sourcePoint" />
+            <mxPoint x="355" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;" value="muestra resultado (confirmación o error)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="770" as="sourcePoint" />
+            <mxPoint x="110" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=top;whiteSpace=wrap;" value="Flecha sólida + punta llena = mensaje síncrono&lt;br&gt;Flecha punteada + punta abierta = retorno&lt;br&gt;Flecha punteada + punta llena = mensaje de creación («create»)&lt;br&gt;Barra vertical = período de activación&lt;br&gt;Marco &quot;alt&quot; = fragmento combinado con dos ramas alternativas (guardas entre corchetes)" vertex="1">
+          <mxGeometry height="50" width="1170" x="30" y="820" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

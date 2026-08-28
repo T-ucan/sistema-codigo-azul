@@ -1,0 +1,31 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="h2O9V6F-7-PaYScYpmdj">
+    <mxGraphModel dx="1246" dy="576" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sys" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;fontSize=13;align=center;verticalAlign=middle;fontStyle=1;" value="&lt;font style=&quot;font-size:10px&quot; face=&quot;Helvetica&quot;&gt;«system»&lt;/font&gt;&lt;br&gt;HospCall Manager v1.0&lt;br&gt;&lt;font style=&quot;font-size:10px&quot; face=&quot;Helvetica&quot;&gt;&lt;i&gt;Gestión de Alarma y Alertas Médicas (Código Azul)&lt;/i&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="260" width="260" x="570" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="a_admin" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;" value="Administrador&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;&lt;i&gt;(Acceso total)&lt;/i&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="180" x="100" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="a_encargado" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;" value="Encargado de Área&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;&lt;i&gt;(Acceso parcial)&lt;/i&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="180" x="1120" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="a_admin" style="endArrow=open;endFill=1;html=1;fontSize=11;strokeColor=#000000;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;" target="sys" value="Configuración">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="sys" style="endArrow=open;endFill=1;html=1;fontSize=11;strokeColor=#000000;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.65;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;" target="a_admin" value="Reportes y&lt;br&gt;Estadísticas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="a_encargado" style="endArrow=open;endFill=1;html=1;fontSize=11;strokeColor=#000000;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.3;exitDx=0;exitDy=0;entryX=1;entryY=0.35;entryDx=0;entryDy=0;" target="sys" value="Activación de&lt;br&gt;Código Azul">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="sys" style="endArrow=open;endFill=1;html=1;fontSize=11;strokeColor=#000000;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.65;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;" target="a_encargado" value="Confirmación&lt;br&gt;de Alerta">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

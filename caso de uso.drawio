@@ -1,0 +1,201 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="Uv1A7pVZlYBqg0431o9b">
+    <mxGraphModel dx="3160" dy="1807" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="boundary1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=center;fontStyle=1;fontSize=14;fillColor=none;strokeColor=#000000;spacingTop=10;" value="Sistema de Gestión Código Azul" vertex="1">
+          <mxGeometry height="680" width="2000" x="140" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ucAuth" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" value="Autenticarse" vertex="1">
+          <mxGeometry height="70" width="200" x="1030" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="ucGestUsuarios" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Gestionar Usuarios" vertex="1">
+          <mxGeometry height="70" width="200" x="220" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="ucConfigArea" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Configurar Áreas / Zonas" vertex="1">
+          <mxGeometry height="70" width="200" x="220" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="ucGestFichas" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Gestionar Fichas de Pacientes" vertex="1">
+          <mxGeometry height="70" width="200" x="220" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="ucVisReportes" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Visualizar Reportes" vertex="1">
+          <mxGeometry height="70" width="200" x="580" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="ucFiltReportes" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Filtrar Reportes" vertex="1">
+          <mxGeometry height="70" width="200" x="460" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="ucExpReportes" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Exportar Reportes" vertex="1">
+          <mxGeometry height="70" width="200" x="700" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="ucLoginApp" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Iniciar Sesión en App Móvil" vertex="1">
+          <mxGeometry height="70" width="200" x="1660" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="ucVerLlamadosApp" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Ver Llamados de Pacientes" vertex="1">
+          <mxGeometry height="70" width="200" x="1660" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="ucAtenderLlamado" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Atender Llamado" vertex="1">
+          <mxGeometry height="70" width="200" x="1660" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="ucRegLlamado" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Registrar Llamado" vertex="1">
+          <mxGeometry height="70" width="200" x="1660" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="ucConsultarFicha" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Consultar Ficha de Paciente" vertex="1">
+          <mxGeometry height="70" width="200" x="1900" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="ucActivarCodigo" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" value="Activar Código Azul" vertex="1">
+          <mxGeometry height="70" width="200" x="1900" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="ucPropagarAlerta" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="Propagar Alerta" vertex="1">
+          <mxGeometry height="70" width="200" x="1900" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="actorAdmin" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;outlineConnect=0;fillColor=#d5e8d4;strokeColor=#82b366;" value="Administrador&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;&lt;i&gt;(Acceso total)&lt;/i&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="40" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="actorEncargado" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;outlineConnect=0;fillColor=#fff2cc;strokeColor=#d6b656;" value="Encargado de Área&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;&lt;i&gt;(Acceso parcial)&lt;/i&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="2180" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=2;" value="Leyenda: línea continua = asociación · línea punteada con flecha = «include» / «extend» · solo dos actores, cada uno con un único rol (Administrador = acceso total, Encargado de Área = acceso parcial), consistente con el diagrama de contexto." vertex="1">
+          <mxGeometry height="30" width="1600" x="140" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" edge="1" parent="1" source="actorAdmin" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucAuth">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="55" y="205" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a2" edge="1" parent="1" source="actorAdmin" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucGestUsuarios">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="55" y="345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a3" edge="1" parent="1" source="actorAdmin" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucConfigArea">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="145" y="470" />
+              <mxPoint x="145" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a4" edge="1" parent="1" source="actorAdmin" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucGestFichas">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="55" y="605" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a5" edge="1" parent="1" source="actorAdmin" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucVisReportes">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="55" y="410" />
+              <mxPoint x="680" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a6" edge="1" parent="1" source="actorEncargado" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucAuth">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2195" y="205" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a7" edge="1" parent="1" source="actorEncargado" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucLoginApp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2195" y="410" />
+              <mxPoint x="1760" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a8" edge="1" parent="1" source="actorEncargado" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucVerLlamadosApp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2133" y="510" />
+              <mxPoint x="2133" y="526" />
+              <mxPoint x="1760" y="526" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a9" edge="1" parent="1" source="actorEncargado" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucAtenderLlamado">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2147" y="510" />
+              <mxPoint x="2147" y="540" />
+              <mxPoint x="1760" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a10" edge="1" parent="1" source="actorEncargado" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucRegLlamado">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2195" y="735" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a11" edge="1" parent="1" source="actorEncargado" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucConsultarFicha">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2195" y="345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a12" edge="1" parent="1" source="actorEncargado" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucActivarCodigo">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2140" y="510" />
+              <mxPoint x="2140" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i1" edge="1" parent="1" source="ucGestUsuarios" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=10;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucAuth" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="320" y="205" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i2" edge="1" parent="1" source="ucVisReportes" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=10;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucAuth" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1130" y="345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i3" edge="1" parent="1" source="ucLoginApp" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=10;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucAuth" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1760" y="205" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i4" edge="1" parent="1" source="ucVerLlamadosApp" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=10;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucLoginApp" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i5" edge="1" parent="1" source="ucActivarCodigo" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=10;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucPropagarAlerta" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="ucFiltReportes" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=10;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucVisReportes" value="«extend»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="ucExpReportes" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=10;edgeStyle=orthogonalEdgeStyle;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="ucVisReportes" value="«extend»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

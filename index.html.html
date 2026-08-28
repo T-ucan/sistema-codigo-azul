@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Gestión Código Azul</title>
+<style>
+/* ============================================================
+   ESTILOS — Design system propio, sin dependencias externas
+   ============================================================ */
+:root{
+  --color-primario:#1d4ed8;
+  --color-primario-oscuro:#13245a;
+  --color-primario-claro:#e8edfc;
+  --color-acento:#0ea5e9;
+  --color-peligro:#dc2626;
+  --color-peligro-claro:#fde8e8;
+  --color-exito:#16a34a;
+  --color-exito-claro:#e6f6ec;
+  --color-advertencia:#d97706;
+  --color-advertencia-claro:#fef3e2;
+  --color-fondo:#f1f5f9;
+  --color-superficie:#ffffff;
+  --color-texto:#0f172a;
+  --color-texto-sec:#64748b;
+  --color-borde:#e2e8f0;
+  --radio:10px;
+  --radio-chico:6px;
+  --sombra:0 1px 3px rgba(15,23,42,.10), 0 1px 2px rgba(15,23,42,.06);
+  --sombra-modal:0 20px 40px rgba(15,23,42,.25);
+  font-size:15px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--color-fondo);
+  color:var(--color-texto);
+  line-height:1.5;
+}
+h1,h2,h3,h4{margin:0 0 .4em 0;font-weight:700;}
+p{margin:0 0 .6em 0;}
+a{color:inherit;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;font-size:1rem;}
+
+/* ---------- Utilidades ---------- */
+.texto-sec{color:var(--color-texto-sec);}
+.texto-chico{font-size:.82rem;}
+
+/* ---------- Botones ---------- */
+.boton{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:var(--radio-chico);border:1px solid transparent;
+  font-weight:600;font-size:.92rem;transition:filter .15s ease, transform .05s ease;
+}
+.boton:active{transform:translateY(1px);}
+.boton-primario{background:var(--color-primario);color:#fff;}
+.boton-primario:hover{filter:brightness(1.08);}
+.boton-secundario{background:#fff;color:var(--color-primario);border-color:var(--color-borde);}
+.boton-secundario:hover{background:var(--color-primario-claro);}
+.boton-peligro{background:var(--color-peligro);color:#fff;}
+.boton-peligro:hover{filter:brightness(1.08);}
+.boton-exito{background:var(--color-exito);color:#fff;}
+.boton-exito:hover{filter:brightness(1.08);}
+.boton-texto{background:none;color:var(--color-texto-sec);padding:6px 8px;}
+.boton-texto:hover{color:var(--color-texto);}
+.boton-chico{padding:6px 10px;font-size:.82rem;}
+.boton-ancho{width:100%;justify-content:center;}
+
+/* ---------- Login ---------- */
+.pantalla-login{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,var(--color-primario-oscuro),#0b1533 70%);
+  padding:24px;
+}
+.tarjeta-login{
+  background:var(--color-superficie);border-radius:16px;box-shadow:var(--sombra-modal);
+  width:100%;max-width:400px;padding:36px 32px;
+}
+.logo-login{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.logo-cruz{
+  width:38px;height:38px;border-radius:9px;background:var(--color-peligro);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;
+}
+.subtitulo-login{color:var(--color-texto-sec);margin-bottom:24px;font-size:.9rem;}
+.campo{margin-bottom:16px;}
+.campo label{display:block;font-size:.84rem;font-weight:600;margin-bottom:5px;color:var(--color-texto-sec);}
+.campo input,.campo select,.campo textarea{
+  width:100%;padding:10px 12px;border:1px solid var(--color-borde);border-radius:var(--radio-chico);
+  background:#fbfcfe;
+}
+.campo input:focus,.campo select:focus,.campo textarea:focus{
+  outline:2px solid var(--color-acento);outline-offset:1px;border-color:var(--color-acento);
+}
+.campo textarea{resize:vertical;min-height:64px;}
+.fila-campos{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.ayuda-login{margin-top:18px;padding:12px;background:var(--color-primario-claro);border-radius:var(--radio-chico);font-size:.78rem;color:#334;}
+.ayuda-login b{display:block;margin-bottom:3px;}
+
+/* ---------- Alertas / errores ---------- */
+.caja-error{
+  background:var(--color-peligro-claro);color:#7f1d1d;border:1px solid #f3c6c6;
+  border-radius:var(--radio-chico);padding:10px 14px;margin-bottom:16px;font-size:.86rem;
+}
+
+/* ---------- Estructura general (shell) ---------- */
+.estructura{display:flex;min-height:100vh;}
+.barra-lateral{
+  width:250px;flex-shrink:0;background:var(--color-primario-oscuro);color:#dce3f5;
+  display:flex;flex-direction:column;padding:20px 0;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.marca{display:flex;align-items:center;gap:10px;padding:0 20px 20px 20px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px;}
+.marca-texto{font-size:1.02rem;font-weight:800;color:#fff;line-height:1.2;}
+.marca-texto small{display:block;font-weight:500;color:#93a3c9;font-size:.7rem;}
+.nav{list-style:none;margin:0;padding:0;flex:1;}
+.nav li{margin:2px 10px;}
+.nav button{
+  width:100%;text-align:left;background:none;border:none;color:#c4cdec;
+  padding:10px 12px;border-radius:var(--radio-chico);font-size:.88rem;font-weight:600;
+  display:flex;align-items:center;gap:10px;
+}
+.nav button:hover{background:rgba(255,255,255,.06);color:#fff;}
+.nav button.activo{background:var(--color-primario);color:#fff;}
+.pie-lateral{padding:14px 20px 0 20px;border-top:1px solid rgba(255,255,255,.12);margin-top:10px;}
+.usuario-actual{font-size:.8rem;color:#93a3c9;margin-bottom:10px;}
+.usuario-actual b{color:#fff;display:block;font-size:.86rem;}
+
+.contenido{flex:1;min-width:0;}
+.topbar{
+  background:var(--color-superficie);border-bottom:1px solid var(--color-borde);
+  padding:16px 28px;display:flex;align-items:center;justify-content:space-between;
+}
+.topbar h1{font-size:1.15rem;margin:0;}
+.area-cuerpo{padding:24px 28px 48px 28px;max-width:1200px;}
+
+/* ---------- Tarjetas / paneles ---------- */
+.panel{background:var(--color-superficie);border:1px solid var(--color-borde);border-radius:var(--radio);padding:20px 22px;margin-bottom:20px;box-shadow:var(--sombra);}
+.panel-cabecera{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.grilla-tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:20px;}
+.tarjeta-metrica{background:var(--color-superficie);border:1px solid var(--color-borde);border-radius:var(--radio);padding:16px 18px;box-shadow:var(--sombra);}
+.tarjeta-metrica .valor{font-size:1.7rem;font-weight:800;color:var(--color-primario);}
+.tarjeta-metrica .etiqueta{color:var(--color-texto-sec);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;}
+
+/* ---------- Tablas ---------- */
+.tabla-contenedor{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--color-borde);}
+th{color:var(--color-texto-sec);font-size:.76rem;text-transform:uppercase;letter-spacing:.03em;font-weight:700;}
+tbody tr:hover{background:#f8fafc;}
+.acciones-fila{display:flex;gap:6px;flex-wrap:wrap;}
+.sin-datos{padding:26px;text-align:center;color:var(--color-texto-sec);}
+
+/* ---------- Badges ---------- */
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.74rem;font-weight:700;}
+.badge-pendiente{background:var(--color-advertencia-claro);color:var(--color-advertencia);}
+.badge-atendido{background:var(--color-exito-claro);color:var(--color-exito);}
+.badge-normal{background:var(--color-primario-claro);color:var(--color-primario);}
+.badge-emergencia{background:var(--color-peligro-claro);color:var(--color-peligro);}
+.badge-admin{background:#eef2ff;color:#4338ca;}
+.badge-encargado{background:#ecfeff;color:#0e7490;}
+
+/* ---------- Formularios en panel ---------- */
+.formulario-ancho{max-width:640px;}
+
+/* ---------- Modal ---------- */
+.fondo-modal{
+  position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:flex-start;justify-content:center;
+  padding:40px 16px;overflow-y:auto;z-index:100;
+}
+.modal{
+  background:var(--color-superficie);border-radius:var(--radio);box-shadow:var(--sombra-modal);
+  width:100%;max-width:480px;padding:24px 26px;
+}
+.modal-cabecera{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.modal-cabecera h3{margin:0;}
+
+/* ---------- Toasts ---------- */
+#contenedor-toast{position:fixed;top:18px;right:18px;z-index:200;display:flex;flex-direction:column;gap:8px;}
+.toast{
+  min-width:260px;max-width:340px;padding:12px 16px;border-radius:var(--radio-chico);box-shadow:var(--sombra-modal);
+  font-size:.86rem;font-weight:600;animation:entrada-toast .18s ease;
+}
+.toast-exito{background:var(--color-exito);color:#fff;}
+.toast-error{background:var(--color-peligro);color:#fff;}
+@keyframes entrada-toast{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ---------- Gráficos ---------- */
+.grafico-svg{width:100%;height:auto;}
+.grafico-eje{stroke:var(--color-borde);stroke-width:1;}
+.grafico-valor{font-size:11px;fill:var(--color-texto);font-weight:700;}
+.grafico-etiqueta{font-size:10px;fill:var(--color-texto-sec);}
+.grafico-linea{fill:none;stroke:var(--color-primario);stroke-width:2.5;}
+.grafico-punto{fill:var(--color-primario);}
+.grafico-vacio{color:var(--color-texto-sec);text-align:center;padding:30px 0;font-size:.85rem;}
+.grafico-torta-contenedor{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.grafico-torta-contenedor svg{width:170px;height:170px;flex-shrink:0;}
+.grafico-leyenda{list-style:none;margin:0;padding:0;font-size:.82rem;display:flex;flex-direction:column;gap:6px;}
+.leyenda-color{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;vertical-align:middle;}
+.grilla-graficos{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+
+/* ---------- Búsqueda / filtros ---------- */
+.barra-filtros{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:6px;}
+.barra-filtros .campo{margin-bottom:0;min-width:150px;flex:1;}
+
+/* ---------- Estado del sistema ---------- */
+.estado-sistema{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--color-exito);font-weight:700;}
+.punto-ok{width:8px;height:8px;border-radius:50%;background:var(--color-exito);display:inline-block;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .grilla-graficos{grid-template-columns:1fr;}
+  .fila-campos{grid-template-columns:1fr;}
+}
+@media (max-width:760px){
+  .estructura{flex-direction:column;}
+  .barra-lateral{width:100%;flex-direction:row;align-items:center;padding:10px 12px;overflow-x:auto;overflow-y:visible;position:sticky;top:0;height:auto;z-index:50;}
+  .marca{border:none;padding:0 12px 0 0;margin:0;}
+  .nav{display:flex;flex:none;}
+  .nav li{margin:0 4px;}
+  .pie-lateral{border:none;padding:0 0 0 12px;margin:0;}
+  .usuario-actual{margin:0;white-space:nowrap;}
+  .usuario-actual b{display:inline;}
+  .area-cuerpo{padding:18px 16px 40px 16px;}
+}
+
+/* ---------- Impresión de reportes ---------- */
+@media print{
+  .no-imprimir{display:none !important;}
+  body,.estructura{background:#fff;}
+  .area-cuerpo{padding:0;max-width:none;}
+  .panel{box-shadow:none;border:1px solid #999;}
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div id="contenedor-modal"></div>
+<div id="contenedor-toast"></div>
+
+<script>
+'use strict';
+
+/* ==============================================================================
+   NOTA DE ARQUITECTURA Y CALIDAD DE CÓDIGO
+   ------------------------------------------------------------------------------
+   El archivo se organiza en capas inspiradas en la arquitectura hexagonal del
+   proyecto (ver "Diagrama de Componentes de la arquitectura hexagonal.drawio"):
+     Utils -> Repositorio (adaptador secundario) -> Dominio (entidades) ->
+     Validador -> Controladores (casos de uso / núcleo) -> Graficos ->
+     Vista (adaptador primario / UI) -> Acciones (dispatcher de eventos).
+   Cada capa solo conoce a la inmediatamente inferior (bajo acoplamiento / CBO).
+
+   Reglas de estilo aplicadas para mantener la calidad del código:
+     - Funciones cortas y de una sola responsabilidad (complejidad ciclomática
+       objetivo ≤5 por función): se usan cláusulas de guarda, listas de reglas
+       de validación y tablas de búsqueda (lookup) en vez de encadenar if/else
+       o switch sobre estados (tipo, estado, rol, resultado, etc.).
+     - Jerarquías de herencia limitadas a un único nivel (Usuario -> Administrador
+       / EncargadoDeArea; Evento -> Llamado / CodigoAzul), muy por debajo del
+       límite de 2 niveles, respetando el principio de sustitución de Liskov:
+       las subclases no restringen ni redefinen el comportamiento de la base.
+     - Todas las "tablas" persistidas en localStorage se inicializan siempre
+       como arreglos (nunca null/undefined); ver Repositorio.inicializar() y
+       Repositorio.verificarIntegridad().
+   ============================================================================== */
+
+/* ============================================================
+   1. CONSTANTES Y CONFIGURACIÓN
+   ============================================================ */
+const CLAVES_TABLA = {
+  AREAS:'ca_areas', USUARIOS:'ca_usuarios', PACIENTES:'ca_pacientes',
+  LLAMADOS:'ca_llamados', CODIGOS_AZUL:'ca_codigosAzul', REPORTES:'ca_reportes',
+};
+const CLAVE_SESION = 'ca_sesion';
+const TABLAS_PERSISTENTES = Object.values(CLAVES_TABLA);
+
+const ROLES = { ADMIN:'ADMINISTRADOR', ENCARGADO:'ENCARGADO' };
+const TIPOS_LLAMADO = ['Normal','Emergencia'];
+const ORIGENES_LLAMADO = ['Cama','Baño'];
+const ESTADOS_LLAMADO = { PENDIENTE:'Pendiente', ATENDIDO:'Atendido' };
+const RESULTADOS_CODIGO_AZUL = ['RCE','Traslado a UTI','Fallecimiento','Otro'];
+
+const CONFIG_ESTADO_LLAMADO = {
+  Pendiente:{ clase:'badge-pendiente', texto:'Pendiente' },
+  Atendido:{ clase:'badge-atendido', texto:'Atendido' },
+};
+const CONFIG_TIPO_LLAMADO = {
+  Normal:{ clase:'badge-normal', texto:'Normal' },
+  Emergencia:{ clase:'badge-emergencia', texto:'Emergencia' },
+};
+const CONFIG_ROL = {
+  ADMINISTRADOR:{ clase:'badge-admin', texto:'Administrador' },
+  ENCARGADO:{ clase:'badge-encargado', texto:'Encargado de Área' },
+};
+
+/* ============================================================
+   2. UTILIDADES (Utils) — funciones puras, sin estado
+   ============================================================ */
+const Utils = {
+  generarId(prefijo){
+    return prefijo + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  },
+  // Hash simple no criptográfico (djb2). Uso educativo/demo: en un despliegue
+  // real este cálculo debe hacerse en el servidor con un algoritmo seguro.
+  hashSimple(texto){
+    let hash = 5381;
+    for(let i=0;i<texto.length;i++){
+      hash = ((hash * 33) ^ texto.charCodeAt(i)) >>> 0;
+    }
+    return hash.toString(36);
+  },
+  normalizarTexto(texto){
+    return (texto || '').toString().trim().toLowerCase();
+  },
+  truncar(texto, largoMax){
+    const cadena = (texto || '').toString();
+    const esLarga = cadena.length > largoMax;
+    return esLarga ? cadena.slice(0, largoMax - 1) + '…' : cadena;
+  },
+  hoyISO(){
+    return new Date().toISOString().slice(0,10);
+  },
+  ahoraDatetimeLocal(){
+    const fecha = new Date();
+    fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset());
+    return fecha.toISOString().slice(0,16);
+  },
+  formatearFechaHora(iso){
+    if(!iso) return '—';
+    const fecha = new Date(iso);
+    const esInvalida = Number.isNaN(fecha.getTime());
+    if(esInvalida) return iso;
+    return fecha.toLocaleString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  },
+  formatearFechaCorta(iso){
+    if(!iso) return '—';
+    const partes = iso.slice(0,10).split('-');
+    const esValida = partes.length === 3;
+    return esValida ? `${partes[2]}/${partes[1]}` : iso;
+  },
+  calcularEdad(fechaNacIso){
+    if(!fechaNacIso) return null;
+    const nacimiento = new Date(fechaNacIso);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const aunNoCumplio = (hoy.getMonth() < nacimiento.getMonth()) ||
+      (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate());
+    if(aunNoCumplio) edad -= 1;
+    return edad;
+  },
+  diferenciaMinutos(inicioIso, finIso){
+    const inicio = new Date(inicioIso).getTime();
+    const fin = new Date(finIso).getTime();
+    const invalido = Number.isNaN(inicio) || Number.isNaN(fin) || fin < inicio;
+    return invalido ? null : Math.round((fin - inicio) / 60000);
+  },
+  promedio(numeros){
+    const lista = numeros.filter(function(n){ return typeof n === 'number' && !Number.isNaN(n); });
+    if(!lista.length) return 0;
+    const suma = lista.reduce(function(acc, n){ return acc + n; }, 0);
+    return Math.round((suma / lista.length) * 10) / 10;
+  },
+  escaparCSV(valor){
+    const texto = (valor === null || valor === undefined) ? '' : String(valor);
+    const requiereComillas = /[",\n;]/.test(texto);
+    const escapado = texto.replace(/"/g,'""');
+    return requiereComillas ? `"${escapado}"` : escapado;
+  },
+  descargarArchivo(nombreArchivo, contenido, tipoMime){
+    const blob = new Blob([contenido], { type:tipoMime });
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = nombreArchivo;
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+    URL.revokeObjectURL(url);
+  },
+  escaparHTML(texto){
+    const div = document.createElement('div');
+    div.textContent = (texto === null || texto === undefined) ? '' : String(texto);
+    return div.innerHTML;
+  },
+};
+
+/* ============================================================
+   3. REPOSITORIO — Adaptador secundario de persistencia (localStorage)
+      Único módulo que conoce el mecanismo real de almacenamiento.
+   ============================================================ */
+const Repositorio = {
+  _leerTabla(clave){
+    const crudo = localStorage.getItem(clave);
+    if(crudo === null) return [];
+    try{
+      const datos = JSON.parse(crudo);
+      return Array.isArray(datos) ? datos : [];
+    }catch(error){
+      console.warn('Tabla dañada, se reinicia vacía:', clave, error);
+      return [];
+    }
+  },
+  _guardarTabla(clave, lista){
+    localStorage.setItem(clave, JSON.stringify(lista || []));
+  },
+  // Garantiza que ninguna tabla del sistema quede nula o inexistente: si la
+  // clave todavía no existe en localStorage, se crea con los datos semilla
+  // (o un arreglo vacío) para que la base de datos nunca esté "null".
+  inicializar(){
+    TABLAS_PERSISTENTES.forEach(function(clave){
+      const noExiste = localStorage.getItem(clave) === null;
+      if(noExiste){
+        Repositorio._guardarTabla(clave, DatosSemilla[clave] ? DatosSemilla[clave]() : []);
+      }
+    });
+  },
+  verificarIntegridad(){
+    const tablasOk = TABLAS_PERSISTENTES.filter(function(clave){
+      return Array.isArray(Repositorio._leerTabla(clave));
+    });
+    return { ok: tablasOk.length === TABLAS_PERSISTENTES.length, cantidadOk: tablasOk.length, total: TABLAS_PERSISTENTES.length };
+  },
+  listar(clave){
+    return this._leerTabla(clave);
+  },
+  buscarPorId(clave, id){
+    return this._leerTabla(clave).find(function(item){ return item.id === id; }) || null;
+  },
+  guardar(clave, entidad){
+    const lista = this._leerTabla(clave);
+    const indice = lista.findIndex(function(item){ return item.id === entidad.id; });
+    const yaExiste = indice !== -1;
+    if(yaExiste){ lista[indice] = entidad; } else { lista.push(entidad); }
+    this._guardarTabla(clave, lista);
+    return entidad;
+  },
+  eliminar(clave, id){
+    const listaRestante = this._leerTabla(clave).filter(function(item){ return item.id !== id; });
+    this._guardarTabla(clave, listaRestante);
+  },
+  guardarSesion(usuarioId){
+    sessionStorage.setItem(CLAVE_SESION, JSON.stringify({ usuarioId }));
+  },
+  leerSesion(){
+    const crudo = sessionStorage.getItem(CLAVE_SESION);
+    if(!crudo) return null;
+    try{ return JSON.parse(crudo); }catch(error){ return null; }
+  },
+  cerrarSesion(){
+    sessionStorage.removeItem(CLAVE_SESION);
+  },
+};
+
+/* ============================================================
+   4. DOMINIO — Entidades y jerarquías (máx. 1 nivel de herencia)
+   ============================================================ */
+class Usuario{
+  constructor({ id, nombre, usuario, rol, areaId }){
+    this.id = id;
+    this.nombre = nombre;
+    this.usuario = usuario;
+    this.rol = rol;
+    this.areaId = areaId || null;
+  }
+  esAdministrador(){ return this.rol === ROLES.ADMIN; }
+}
+// Los métodos de caso de uso del diagrama de clases (gestionarUsuarios(),
+// activarCodigoAzul(), etc.) se realizan como pares Vista + Controlador
+// (ver capas 7 y 10): estas subclases marcan el tipo de perfil para que
+// ACCIONES y NAV_POR_ROL puedan variar el comportamiento por rol.
+class Administrador extends Usuario{}
+class EncargadoDeArea extends Usuario{}
+function crearUsuarioDominio(registro){
+  const esAdministrador = registro.rol === ROLES.ADMIN;
+  return esAdministrador ? new Administrador(registro) : new EncargadoDeArea(registro);
+}
+
+class Evento{
+  constructor({ id, fechaHora, areaId, personalInterviniente, observaciones }){
+    this.id = id;
+    this.fechaHora = fechaHora;
+    this.areaId = areaId;
+    this.personalInterviniente = personalInterviniente || '';
+    this.observaciones = observaciones || '';
+  }
+}
+class Llamado extends Evento{
+  constructor(datos){
+    super(datos);
+    this.tipo = datos.tipo;
+    this.origen = datos.origen;
+    this.pacienteId = datos.pacienteId || null;
+    this.estado = ESTADOS_LLAMADO.PENDIENTE;
+    this.tiempoRespuesta = null;
+  }
+}
+class CodigoAzul extends Evento{
+  constructor(datos){
+    super(datos);
+    this.pacienteId = datos.pacienteId;
+    this.horaLlegadaEquipo = datos.horaLlegadaEquipo;
+    this.tiempoRespuesta = Utils.diferenciaMinutos(datos.fechaHora, datos.horaLlegadaEquipo);
+    this.intervencionRealizada = datos.intervencionRealizada;
+    this.resultado = datos.resultado;
+    this.llamadoOrigenId = datos.llamadoOrigenId || null;
+  }
+}
+
+/* ============================================================
+   5. DATOS SEMILLA — aseguran tablas nunca vacías/null en el primer uso
+   ============================================================ */
+const DatosSemilla = {
+  [CLAVES_TABLA.AREAS]: function(){
+    return [
+      { id:'area-1', nombre:'Guardia', ubicacion:'Planta Baja - Sector A' },
+      { id:'area-2', nombre:'Terapia Intensiva', ubicacion:'2° Piso - Sector B' },
+      { id:'area-3', nombre:'Internación General', ubicacion:'3° Piso - Sector C' },
+    ];
+  },
+  [CLAVES_TABLA.USUARIOS]: function(){
+    return [
+      { id:'usr-1', nombre:'Administrador General', usuario:'admin', claveHash:Utils.hashSimple('admin123'), rol:ROLES.ADMIN, areaId:null },
+      { id:'usr-2', nombre:'Juan Pérez', usuario:'jperez', claveHash:Utils.hashSimple('1234'), rol:ROLES.ENCARGADO, areaId:'area-1' },
+      { id:'usr-3', nombre:'María Gómez', usuario:'mgomez', claveHash:Utils.hashSimple('1234'), rol:ROLES.ENCARGADO, areaId:'area-2' },
+    ];
+  },
+  [CLAVES_TABLA.PACIENTES]: function(){
+    return [
+      { id:'pac-1', nombre:'Carlos Rodríguez', dni:'30123456', fechaNacimiento:'1975-04-12', datosMedicos:'Hipertensión. Alergia a penicilina.', areaId:'area-1' },
+      { id:'pac-2', nombre:'Ana Fernández', dni:'28456789', fechaNacimiento:'1968-09-03', datosMedicos:'Diabetes tipo II.', areaId:'area-2' },
+      { id:'pac-3', nombre:'Luis Martínez', dni:'35789012', fechaNacimiento:'1990-01-20', datosMedicos:'Sin antecedentes relevantes.', areaId:'area-1' },
+    ];
+  },
+  [CLAVES_TABLA.LLAMADOS]: function(){
+    const haceISO = function(diasAtras, horas){
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() - diasAtras);
+      fecha.setHours(horas, 15, 0, 0);
+      return fecha.toISOString().slice(0,16);
+    };
+    return [
+      { id:'lla-1', fechaHora:haceISO(0,9), areaId:'area-1', tipo:'Normal', origen:'Cama', pacienteId:'pac-1', personalInterviniente:'Enf. Torres', observaciones:'Solicita agua.', estado:'Atendido', tiempoRespuesta:4 },
+      { id:'lla-2', fechaHora:haceISO(0,11), areaId:'area-1', tipo:'Emergencia', origen:'Baño', pacienteId:'pac-3', personalInterviniente:'Enf. Torres', observaciones:'Mareos.', estado:'Pendiente', tiempoRespuesta:null },
+      { id:'lla-3', fechaHora:haceISO(1,15), areaId:'area-2', tipo:'Normal', origen:'Cama', pacienteId:'pac-2', personalInterviniente:'Enf. Ledesma', observaciones:'', estado:'Atendido', tiempoRespuesta:6 },
+      { id:'lla-4', fechaHora:haceISO(2,8), areaId:'area-1', tipo:'Emergencia', origen:'Cama', pacienteId:'pac-1', personalInterviniente:'Enf. Torres', observaciones:'Dolor de pecho.', estado:'Atendido', tiempoRespuesta:3 },
+      { id:'lla-5', fechaHora:haceISO(3,19), areaId:'area-3', tipo:'Normal', origen:'Baño', pacienteId:null, personalInterviniente:'Enf. Sosa', observaciones:'', estado:'Atendido', tiempoRespuesta:8 },
+      { id:'lla-6', fechaHora:haceISO(4,10), areaId:'area-2', tipo:'Normal', origen:'Cama', pacienteId:'pac-2', personalInterviniente:'Enf. Ledesma', observaciones:'', estado:'Atendido', tiempoRespuesta:5 },
+      { id:'lla-7', fechaHora:haceISO(5,17), areaId:'area-1', tipo:'Emergencia', origen:'Cama', pacienteId:'pac-3', personalInterviniente:'Enf. Torres', observaciones:'Caída.', estado:'Atendido', tiempoRespuesta:2 },
+    ];
+  },
+  [CLAVES_TABLA.CODIGOS_AZUL]: function(){
+    const haceISO = function(diasAtras, horas){
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() - diasAtras);
+      fecha.setHours(horas, 5, 0, 0);
+      return fecha.toISOString().slice(0,16);
+    };
+    const llegadaISO = function(diasAtras, horas, minutosSuma){
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() - diasAtras);
+      fecha.setHours(horas, 5 + minutosSuma, 0, 0);
+      return fecha.toISOString().slice(0,16);
+    };
+    return [
+      { id:'ca-1', fechaHora:haceISO(2,8), areaId:'area-1', pacienteId:'pac-1', horaLlegadaEquipo:llegadaISO(2,8,3), tiempoRespuesta:3, personalInterviniente:'Equipo de Reanimación A', intervencionRealizada:'RCP y desfibrilación.', resultado:'RCE', observaciones:'Traslado posterior a UTI.', llamadoOrigenId:'lla-4' },
+      { id:'ca-2', fechaHora:haceISO(5,17), areaId:'area-1', pacienteId:'pac-3', horaLlegadaEquipo:llegadaISO(5,17,2), tiempoRespuesta:2, personalInterviniente:'Equipo de Reanimación B', intervencionRealizada:'Inmovilización y control de signos vitales.', resultado:'Traslado a UTI', observaciones:'', llamadoOrigenId:'lla-7' },
+    ];
+  },
+  [CLAVES_TABLA.REPORTES]: function(){ return []; },
+};
+
+/* ============================================================
+   6. VALIDADORES — cada regla es una condición simple; se evalúan
+      como lista de reglas (evita ifs anidados y ifs sobre estado)
+   ============================================================ */
+const Validador = {
+  _errores(reglas){
+    return reglas.filter(function(regla){ return !regla.valido; }).map(function(regla){ return regla.mensaje; });
+  },
+  area(datos, idActual){
+    const duplicada = Repositorio.listar(CLAVES_TABLA.AREAS).some(function(a){
+      return a.id !== idActual && Utils.normalizarTexto(a.nombre) === Utils.normalizarTexto(datos.nombre);
+    });
+    return this._errores([
+      { valido: Utils.normalizarTexto(datos.nombre).length >= 2, mensaje:'El nombre del área debe tener al menos 2 caracteres.' },
+      { valido: !duplicada, mensaje:'Ya existe un área con ese nombre.' },
+      { valido: Utils.normalizarTexto(datos.ubicacion).length >= 2, mensaje:'La ubicación es obligatoria.' },
+    ]);
+  },
+  usuario(datos, idActual, esNuevo){
+    const requiereArea = datos.rol === ROLES.ENCARGADO;
+    const usuarioDuplicado = Repositorio.listar(CLAVES_TABLA.USUARIOS).some(function(u){
+      return u.id !== idActual && Utils.normalizarTexto(u.usuario) === Utils.normalizarTexto(datos.usuario);
+    });
+    const claveIngresada = (datos.clave || '').trim();
+    const claveValida = esNuevo ? claveIngresada.length >= 4 : (claveIngresada === '' || claveIngresada.length >= 4);
+    return this._errores([
+      { valido: Utils.normalizarTexto(datos.nombre).length >= 2, mensaje:'El nombre completo es obligatorio.' },
+      { valido: Utils.normalizarTexto(datos.usuario).length >= 3, mensaje:'El usuario de acceso debe tener al menos 3 caracteres.' },
+      { valido: !usuarioDuplicado, mensaje:'Ya existe un usuario con ese nombre de acceso.' },
+      { valido: [ROLES.ADMIN, ROLES.ENCARGADO].includes(datos.rol), mensaje:'Debe seleccionar un rol válido.' },
+      { valido: !requiereArea || !!datos.areaId, mensaje:'Debe asignar un área al Encargado de Área.' },
+      { valido: claveValida, mensaje:'La contraseña debe tener al menos 4 caracteres.' },
+    ]);
+  },
+  paciente(datos){
+    return this._errores([
+      { valido: Utils.normalizarTexto(datos.nombre).length >= 2, mensaje:'El nombre del paciente es obligatorio.' },
+      { valido: /^\d{7,8}$/.test(datos.dni || ''), mensaje:'El DNI debe tener entre 7 y 8 dígitos numéricos.' },
+      { valido: !!datos.fechaNacimiento && datos.fechaNacimiento <= Utils.hoyISO(), mensaje:'La fecha de nacimiento no puede ser futura.' },
+      { valido: !!datos.areaId, mensaje:'Debe asignar un área al paciente.' },
+    ]);
+  },
+  llamado(datos){
+    return this._errores([
+      { valido: !!datos.fechaHora, mensaje:'Debe indicar la fecha y hora del llamado.' },
+      { valido: TIPOS_LLAMADO.includes(datos.tipo), mensaje:'Debe seleccionar un tipo de llamado válido.' },
+      { valido: ORIGENES_LLAMADO.includes(datos.origen), mensaje:'Debe seleccionar un origen válido (Cama o Baño).' },
+      { valido: Utils.normalizarTexto(datos.personalInterviniente).length >= 2, mensaje:'Debe indicar el personal interviniente.' },
+    ]);
+  },
+  fichaCodigoAzul(datos){
+    const llegadaPosterior = !!datos.horaLlegadaEquipo && datos.horaLlegadaEquipo >= datos.fechaHora;
+    return this._errores([
+      { valido: !!datos.fechaHora, mensaje:'Debe indicar la fecha y hora del evento.' },
+      { valido: !!datos.pacienteId, mensaje:'Debe seleccionar el paciente correspondiente.' },
+      { valido: llegadaPosterior, mensaje:'La hora de llegada del equipo debe ser posterior al evento.' },
+      { valido: Utils.normalizarTexto(datos.personalInterviniente).length >= 2, mensaje:'Debe indicar el personal interviniente.' },
+      { valido: Utils.normalizarTexto(datos.intervencionRealizada).length >= 3, mensaje:'Debe describir la intervención realizada.' },
+      { valido: RESULTADOS_CODIGO_AZUL.includes(datos.resultado), mensaje:'Debe seleccionar un resultado válido.' },
+    ]);
+  },
+};
+
+/* ============================================================
+   7. CONTROLADORES — Casos de uso (núcleo de la aplicación)
+      Solo dependen de Repositorio, Dominio y Validador (bajo CBO)
+   ============================================================ */
+const ControladorAuth = {
+  autenticar(usuario, clave){
+    const claveHash = Utils.hashSimple(clave || '');
+    const registro = Repositorio.listar(CLAVES_TABLA.USUARIOS).find(function(u){
+      return Utils.normalizarTexto(u.usuario) === Utils.normalizarTexto(usuario) && u.claveHash === claveHash;
+    });
+    if(!registro) return { ok:false, mensaje:'Usuario o contraseña incorrectos.' };
+    Repositorio.guardarSesion(registro.id);
+    return { ok:true, usuario:crearUsuarioDominio(registro) };
+  },
+  cerrarSesion(){ Repositorio.cerrarSesion(); },
+  obtenerSesion(){
+    const sesion = Repositorio.leerSesion();
+    if(!sesion) return null;
+    const registro = Repositorio.buscarPorId(CLAVES_TABLA.USUARIOS, sesion.usuarioId);
+    return registro ? crearUsuarioDominio(registro) : null;
+  },
+};
+
+const ControladorAreas = {
+  listar(){ return Repositorio.listar(CLAVES_TABLA.AREAS); },
+  guardar(datos, idExistente){
+    const esNuevo = !idExistente;
+    const errores = Validador.area(datos, idExistente);
+    if(errores.length) return { ok:false, errores };
+    const entidad = { id: idExistente || Utils.generarId('area'), nombre:datos.nombre.trim(), ubicacion:datos.ubicacion.trim() };
+    Repositorio.guardar(CLAVES_TABLA.AREAS, entidad);
+    return { ok:true, entidad, esNuevo };
+  },
+  eliminar(id){
+    const enUso = Repositorio.listar(CLAVES_TABLA.PACIENTES).some(function(p){ return p.areaId === id; }) ||
+                  Repositorio.listar(CLAVES_TABLA.USUARIOS).some(function(u){ return u.areaId === id; });
+    if(enUso) return { ok:false, mensaje:'No se puede eliminar: el área tiene pacientes o usuarios asignados.' };
+    Repositorio.eliminar(CLAVES_TABLA.AREAS, id);
+    return { ok:true };
+  },
+};
+
+const ControladorUsuarios = {
+  listar(){ return Repositorio.listar(CLAVES_TABLA.USUARIOS); },
+  guardar(datos, idExistente){
+    const esNuevo = !idExistente;
+    const errores = Validador.usuario(datos, idExistente, esNuevo);
+    if(errores.length) return { ok:false, errores };
+    const existente = idExistente ? Repositorio.buscarPorId(CLAVES_TABLA.USUARIOS, idExistente) : null;
+    const claveIngresada = (datos.clave || '').trim();
+    const claveHash = claveIngresada ? Utils.hashSimple(claveIngresada) : existente.claveHash;
+    const entidad = {
+      id: idExistente || Utils.generarId('usr'),
+      nombre: datos.nombre.trim(),
+      usuario: datos.usuario.trim(),
+      claveHash,
+      rol: datos.rol,
+      areaId: datos.rol === ROLES.ENCARGADO ? datos.areaId : null,
+    };
+    Repositorio.guardar(CLAVES_TABLA.USUARIOS, entidad);
+    return { ok:true, entidad, esNuevo };
+  },
+  eliminar(id){
+    const sesion = Repositorio.leerSesion();
+    const esUsuarioActual = sesion && sesion.usuarioId === id;
+    if(esUsuarioActual) return { ok:false, mensaje:'No puede eliminar el usuario con el que está trabajando.' };
+    Repositorio.eliminar(CLAVES_TABLA.USUARIOS, id);
+    return { ok:true };
+  },
+};
+
+const ControladorPacientes = {
+  listar(){ return Repositorio.listar(CLAVES_TABLA.PACIENTES); },
+  listarPorArea(areaId){ return this.listar().filter(function(p){ return p.areaId === areaId; }); },
+  buscar(texto){
+    const consulta = Utils.normalizarTexto(texto);
+    if(!consulta) return this.listar();
+    return this.listar().filter(function(p){
+      return Utils.normalizarTexto(p.nombre).includes(consulta) || (p.dni || '').includes(consulta);
+    });
+  },
+  guardar(datos, idExistente){
+    const esNuevo = !idExistente;
+    const errores = Validador.paciente(datos);
+    if(errores.length) return { ok:false, errores };
+    const entidad = {
+      id: idExistente || Utils.generarId('pac'),
+      nombre: datos.nombre.trim(),
+      dni: datos.dni.trim(),
+      fechaNacimiento: datos.fechaNacimiento,
+      datosMedicos: (datos.datosMedicos || '').trim(),
+      areaId: datos.areaId,
+    };
+    Repositorio.guardar(CLAVES_TABLA.PACIENTES, entidad);
+    return { ok:true, entidad, esNuevo };
+  },
+};
+
+const ControladorLlamados = {
+  listar(){ return Repositorio.listar(CLAVES_TABLA.LLAMADOS); },
+  listarPorArea(areaId){ return this.listar().filter(function(l){ return l.areaId === areaId; }); },
+  listarPendientesPorArea(areaId){
+    return this.listarPorArea(areaId).filter(function(l){ return l.estado === ESTADOS_LLAMADO.PENDIENTE; });
+  },
+  // Caso de uso "Registrar Llamado": replica el fragmento alt del diagrama de
+  // secuencia (datos válidos -> crear y persistir; datos inválidos -> error).
+  registrar(datosFormulario, areaId){
+    const datosCompletos = Object.assign({}, datosFormulario, { areaId });
+    const errores = Validador.llamado(datosCompletos);
+    if(errores.length) return { ok:false, errores };
+    const llamado = new Llamado(Object.assign({ id:Utils.generarId('lla') }, datosCompletos));
+    Repositorio.guardar(CLAVES_TABLA.LLAMADOS, Object.assign({}, llamado));
+    return { ok:true, llamado };
+  },
+  marcarAtendido(id){
+    const llamado = Repositorio.buscarPorId(CLAVES_TABLA.LLAMADOS, id);
+    if(!llamado) return { ok:false, mensaje:'Llamado no encontrado.' };
+    llamado.estado = ESTADOS_LLAMADO.ATENDIDO;
+    llamado.tiempoRespuesta = Utils.diferenciaMinutos(llamado.fechaHora, new Date().toISOString().slice(0,16));
+    Repositorio.guardar(CLAVES_TABLA.LLAMADOS, llamado);
+    return { ok:true, llamado };
+  },
+};
+
+const ControladorCodigoAzul = {
+  listar(){ return Repositorio.listar(CLAVES_TABLA.CODIGOS_AZUL); },
+  listarPorArea(areaId){ return this.listar().filter(function(c){ return c.areaId === areaId; }); },
+  // Caso de uso "Registrar Ficha de Código Azul": carga manual y posterior al
+  // evento (sin activación automática ni hardware), según lo documentado.
+  registrar(datosFormulario, areaId){
+    const datosCompletos = Object.assign({}, datosFormulario, { areaId });
+    const errores = Validador.fichaCodigoAzul(datosCompletos);
+    if(errores.length) return { ok:false, errores };
+    const ficha = new CodigoAzul(Object.assign({ id:Utils.generarId('ca') }, datosCompletos));
+    Repositorio.guardar(CLAVES_TABLA.CODIGOS_AZUL, Object.assign({}, ficha));
+    return { ok:true, ficha };
+  },
+};
+
+const ControladorReportes = {
+  _coincideArea(llamado, areaId){ return !areaId || llamado.areaId === areaId; },
+  _coincideOrigen(llamado, origen){ return !origen || llamado.origen === origen; },
+  _coincideTipo(llamado, tipo){ return !tipo || llamado.tipo === tipo; },
+  _coincideDesde(llamado, desde){ return !desde || llamado.fechaHora.slice(0,10) >= desde; },
+  _coincideHasta(llamado, hasta){ return !hasta || llamado.fechaHora.slice(0,10) <= hasta; },
+  _cumpleFiltros(llamado, filtros){
+    return this._coincideArea(llamado, filtros.areaId)
+      && this._coincideOrigen(llamado, filtros.origen)
+      && this._coincideTipo(llamado, filtros.tipo)
+      && this._coincideDesde(llamado, filtros.desde)
+      && this._coincideHasta(llamado, filtros.hasta);
+  },
+  _agruparPor(lista, obtenerClave){
+    const mapa = new Map();
+    lista.forEach(function(item){
+      const clave = obtenerClave(item);
+      mapa.set(clave, (mapa.get(clave) || 0) + 1);
+    });
+    return Array.from(mapa, function(par){ return { etiqueta:par[0], valor:par[1] }; });
+  },
+  nombreArea(areaId){
+    const area = Repositorio.buscarPorId(CLAVES_TABLA.AREAS, areaId);
+    return area ? area.nombre : 'Sin área';
+  },
+  generarEstadisticas(filtros){
+    const llamados = ControladorLlamados.listar().filter(function(l){ return ControladorReportes._cumpleFiltros(l, filtros); });
+    const tiempos = llamados.filter(function(l){ return typeof l.tiempoRespuesta === 'number'; }).map(function(l){ return l.tiempoRespuesta; });
+    return {
+      llamados,
+      total: llamados.length,
+      atendidos: llamados.filter(function(l){ return l.estado === ESTADOS_LLAMADO.ATENDIDO; }).length,
+      pendientes: llamados.filter(function(l){ return l.estado === ESTADOS_LLAMADO.PENDIENTE; }).length,
+      tiempoPromedioRespuesta: Utils.promedio(tiempos),
+      porArea: this._agruparPor(llamados, function(l){ return ControladorReportes.nombreArea(l.areaId); }),
+      porTipo: this._agruparPor(llamados, function(l){ return l.tipo; }),
+      porDia: this._agruparPor(llamados, function(l){ return l.fechaHora.slice(0,10); })
+        .sort(function(a,b){ return a.etiqueta.localeCompare(b.etiqueta); }),
+    };
+  },
+  registrarGeneracion(usuarioId, formato, filtros){
+    Repositorio.guardar(CLAVES_TABLA.REPORTES, {
+      id: Utils.generarId('rep'),
+      fechaGeneracion: new Date().toISOString(),
+      formato,
+      filtrosAplicados: JSON.stringify(filtros),
+      usuarioId,
+    });
+  },
+  exportarCSV(filtros, usuarioId){
+    const { llamados } = this.generarEstadisticas(filtros);
+    const encabezado = ['Fecha y hora','Área','Tipo','Origen','Estado','Tiempo de respuesta (min)'];
+    const filas = llamados.map(function(l){
+      return [ l.fechaHora, ControladorReportes.nombreArea(l.areaId), l.tipo, l.origen, l.estado, l.tiempoRespuesta === null ? '' : l.tiempoRespuesta ];
+    });
+    const csv = [encabezado].concat(filas).map(function(fila){
+      return fila.map(Utils.escaparCSV).join(',');
+    }).join('\n');
+    Utils.descargarArchivo('reporte-codigo-azul.csv', csv, 'text/csv;charset=utf-8;');
+    this.registrarGeneracion(usuarioId, 'CSV', filtros);
+  },
+};
+
+/* ============================================================
+   8. GRÁFICOS SVG — barras, torta y líneas, sin librerías externas
+   ============================================================ */
+const Graficos = {
+  COLORES: ['#1d4ed8','#f97316','#16a34a','#dc2626','#7c3aed','#0891b2','#d97706'],
+
+  renderBarras(datos){
+    const ancho = 460, alto = 230, margen = 30;
+    if(!datos.length) return this._svgVacio(ancho, alto);
+    const valorMaximo = Math.max(1, ...datos.map(function(d){ return d.valor; }));
+    const anchoBarra = (ancho - margen*2) / datos.length;
+    const barras = datos.map(function(d, indice){
+      const alturaBarra = (d.valor / valorMaximo) * (alto - margen*2 - 10);
+      const x = margen + indice*anchoBarra + anchoBarra*0.18;
+      const y = alto - margen - alturaBarra;
+      const anchoReal = anchoBarra*0.64;
+      const color = Graficos.COLORES[indice % Graficos.COLORES.length];
+      return '<rect x="'+x+'" y="'+y+'" width="'+anchoReal+'" height="'+alturaBarra+'" rx="4" fill="'+color+'"></rect>'+
+        '<text x="'+(x+anchoReal/2)+'" y="'+(y-6)+'" text-anchor="middle" class="grafico-valor">'+d.valor+'</text>'+
+        '<text x="'+(x+anchoReal/2)+'" y="'+(alto-margen+16)+'" text-anchor="middle" class="grafico-etiqueta">'+Utils.escaparHTML(Utils.truncar(d.etiqueta,11))+'</text>';
+    }).join('');
+    return '<svg viewBox="0 0 '+ancho+' '+alto+'" class="grafico-svg" role="img" aria-label="Gráfico de barras">'+
+      '<line x1="'+margen+'" y1="'+(alto-margen)+'" x2="'+(ancho-margen)+'" y2="'+(alto-margen)+'" class="grafico-eje"></line>'+
+      barras+'</svg>';
+  },
+
+  renderTorta(datos){
+    const total = datos.reduce(function(acc,d){ return acc + d.valor; }, 0);
+    if(total === 0) return this._vacioHTML();
+    let anguloAcumulado = 0;
+    const sectores = datos.map(function(d, indice){
+      const proporcion = d.valor / total;
+      const anguloInicio = anguloAcumulado;
+      anguloAcumulado += proporcion*360;
+      const trazo = Graficos._sectorPath(100, 100, 88, anguloInicio, anguloAcumulado);
+      const color = Graficos.COLORES[indice % Graficos.COLORES.length];
+      const porcentaje = Math.round(proporcion*100);
+      return '<path d="'+trazo+'" fill="'+color+'"><title>'+Utils.escaparHTML(d.etiqueta)+': '+d.valor+' ('+porcentaje+'%)</title></path>';
+    }).join('');
+    const leyenda = datos.map(function(d, indice){
+      const color = Graficos.COLORES[indice % Graficos.COLORES.length];
+      return '<li><span class="leyenda-color" style="background:'+color+'"></span>'+Utils.escaparHTML(d.etiqueta)+': <b>'+d.valor+'</b></li>';
+    }).join('');
+    return '<div class="grafico-torta-contenedor"><svg viewBox="0 0 200 200" role="img" aria-label="Gráfico de torta">'+sectores+'</svg>'+
+      '<ul class="grafico-leyenda">'+leyenda+'</ul></div>';
+  },
+
+  renderLineas(datos){
+    const ancho = 460, alto = 220, margen = 30;
+    if(!datos.length) return this._svgVacio(ancho, alto);
+    const valorMaximo = Math.max(1, ...datos.map(function(d){ return d.valor; }));
+    const paso = datos.length > 1 ? (ancho - margen*2) / (datos.length - 1) : 0;
+    const puntos = datos.map(function(d, indice){
+      const x = margen + indice*paso;
+      const y = alto - margen - (d.valor/valorMaximo)*(alto - margen*2 - 10);
+      return { x:x, y:y, etiqueta:d.etiqueta, valor:d.valor };
+    });
+    const polilinea = puntos.map(function(p){ return p.x+','+p.y; }).join(' ');
+    const circulos = puntos.map(function(p){
+      return '<circle cx="'+p.x+'" cy="'+p.y+'" r="4" class="grafico-punto"><title>'+Utils.escaparHTML(p.etiqueta)+': '+p.valor+'</title></circle>';
+    }).join('');
+    const etiquetas = puntos.map(function(p){
+      return '<text x="'+p.x+'" y="'+(alto-margen+16)+'" text-anchor="middle" class="grafico-etiqueta">'+Utils.formatearFechaCorta(p.etiqueta)+'</text>';
+    }).join('');
+    return '<svg viewBox="0 0 '+ancho+' '+alto+'" class="grafico-svg" role="img" aria-label="Gráfico de líneas">'+
+      '<line x1="'+margen+'" y1="'+(alto-margen)+'" x2="'+(ancho-margen)+'" y2="'+(alto-margen)+'" class="grafico-eje"></line>'+
+      '<polyline points="'+polilinea+'" class="grafico-linea"></polyline>'+circulos+etiquetas+'</svg>';
+  },
+
+  _sectorPath(cx, cy, r, anguloInicioGrados, anguloFinGrados){
+    const inicio = this._puntoEnCirculo(cx, cy, r, anguloInicioGrados);
+    const fin = this._puntoEnCirculo(cx, cy, r, anguloFinGrados);
+    const arcoGrande = (anguloFinGrados - anguloInicioGrados) > 180 ? 1 : 0;
+    return 'M '+cx+' '+cy+' L '+inicio.x+' '+inicio.y+' A '+r+' '+r+' 0 '+arcoGrande+' 1 '+fin.x+' '+fin.y+' Z';
+  },
+  _puntoEnCirculo(cx, cy, r, anguloGrados){
+    const anguloRad = (anguloGrados - 90) * Math.PI / 180;
+    return { x: cx + r*Math.cos(anguloRad), y: cy + r*Math.sin(anguloRad) };
+  },
+  _svgVacio(ancho, alto){
+    return '<svg viewBox="0 0 '+ancho+' '+alto+'" class="grafico-svg"><text x="50%" y="50%" text-anchor="middle" class="grafico-etiqueta">Sin datos para mostrar</text></svg>';
+  },
+  _vacioHTML(){ return '<p class="grafico-vacio">Sin datos para mostrar.</p>'; },
+};
+
+/* ============================================================
+   9. ESTADO DE LA VISTA (UI State) — solo datos de presentación
+   ============================================================ */
+const EstadoVista = {
+  vistaActual: 'raiz',
+  errorLogin: '',
+  filtrosReportes: { areaId:'', origen:'', tipo:'', desde:'', hasta:'' },
+  ultimosResultadosReportes: null,
+  busquedaPaciente: '',
+  modal: null, // { tipo, idExistente }
+};
+
+/* ============================================================
+   10. VISTA — Adaptador primario: arma HTML a partir del estado
+   ============================================================ */
+const NAV_POR_ROL = {
+  ADMINISTRADOR: [
+    { vista:'admin-areas', etiqueta:'Áreas / Zonas', icono:'🏥' },
+    { vista:'admin-usuarios', etiqueta:'Usuarios', icono:'👥' },
+    { vista:'admin-pacientes', etiqueta:'Pacientes', icono:'🩺' },
+    { vista:'admin-reportes', etiqueta:'Reportes', icono:'📊' },
+  ],
+  ENCARGADO: [
+    { vista:'encargado-llamado', etiqueta:'Registrar Llamado', icono:'📞' },
+    { vista:'encargado-codigo-azul', etiqueta:'Ficha Código Azul', icono:'🚨' },
+    { vista:'encargado-pendientes', etiqueta:'Atender Llamados', icono:'✅' },
+    { vista:'encargado-paciente', etiqueta:'Consultar Paciente', icono:'🔍' },
+  ],
+};
+const TITULOS_VISTA = {
+  'admin-areas':'Áreas y Zonas', 'admin-usuarios':'Gestión de Usuarios', 'admin-pacientes':'Fichas de Pacientes',
+  'admin-reportes':'Reportes y Estadísticas', 'encargado-llamado':'Registrar Llamado', 'encargado-codigo-azul':'Ficha de Código Azul',
+  'encargado-pendientes':'Llamados Pendientes', 'encargado-paciente':'Consultar Ficha de Paciente',
+};
+
+function badgeEstadoLlamado(estado){
+  const cfg = CONFIG_ESTADO_LLAMADO[estado] || { clase:'', texto:estado };
+  return '<span class="badge '+cfg.clase+'">'+cfg.texto+'</span>';
+}
+function badgeTipoLlamado(tipo){
+  const cfg = CONFIG_TIPO_LLAMADO[tipo] || { clase:'', texto:tipo };
+  return '<span class="badge '+cfg.clase+'">'+cfg.texto+'</span>';
+}
+function badgeRol(rol){
+  const cfg = CONFIG_ROL[rol] || { clase:'', texto:rol };
+  return '<span class="badge '+cfg.clase+'">'+cfg.texto+'</span>';
+}
+
+const Vista = {
+  render(){
+    const sesion = ControladorAuth.obtenerSesion();
+    document.getElementById('app').innerHTML = sesion ? this.shell(sesion) : this.login();
+    document.getElementById('contenedor-modal').innerHTML = EstadoVista.modal ? this.modal(sesion) : '';
+    this._enfocarPrimerCampo();
+  },
+  _enfocarPrimerCampo(){
+    const campo = document.querySelector('#contenedor-modal input, #contenedor-modal select');
+    if(campo) campo.focus();
+  },
+
+  login(){
+    const error = EstadoVista.errorLogin
+      ? '<div class="caja-error">'+Utils.escaparHTML(EstadoVista.errorLogin)+'</div>' : '';
+    return '<div class="pantalla-login"><div class="tarjeta-login">'+
+      '<div class="logo-login"><div class="logo-cruz">+</div><div><div style="font-weight:800;font-size:1.05rem;">Código Azul</div>'+
+      '<div class="texto-chico texto-sec">HospCall Manager</div></div></div>'+
+      '<p class="subtitulo-login">Sistema de Gestión de Alarma y Alertas Médicas</p>'+
+      error+
+      '<form data-accion-submit="enviar-login" novalidate>'+
+        '<div class="campo"><label for="campo-usuario">Usuario</label><input id="campo-usuario" name="usuario" type="text" autocomplete="username" required></div>'+
+        '<div class="campo"><label for="campo-clave">Contraseña</label><input id="campo-clave" name="clave" type="password" autocomplete="current-password" required></div>'+
+        '<button type="submit" class="boton boton-primario boton-ancho">Ingresar</button>'+
+      '</form>'+
+      '<div class="ayuda-login"><b>Usuarios de demostración</b>'+
+        'Administrador: admin / admin123<br>Encargado de Área: jperez / 1234 (Guardia)</div>'+
+    '</div></div>';
+  },
+
+  shell(sesionUsuario){
+    const itemsNav = NAV_POR_ROL[sesionUsuario.rol] || [];
+    const vistaValida = itemsNav.some(function(it){ return it.vista === EstadoVista.vistaActual; });
+    if(!vistaValida) EstadoVista.vistaActual = itemsNav[0] ? itemsNav[0].vista : 'raiz';
+    const enlaces = itemsNav.map(function(it){
+      const activo = it.vista === EstadoVista.vistaActual ? ' activo' : '';
+      return '<li><button type="button" class="'+activo.trim()+'" data-accion="cambiar-vista" data-vista="'+it.vista+'"><span>'+it.icono+'</span> '+it.etiqueta+'</button></li>';
+    }).join('');
+    const areaUsuario = sesionUsuario.esAdministrador() ? 'Todas las áreas' : ControladorReportes.nombreArea(sesionUsuario.areaId);
+    return '<div class="estructura">'+
+      '<aside class="barra-lateral no-imprimir">'+
+        '<div class="marca"><div class="logo-cruz">+</div><div class="marca-texto">Código Azul<small>HospCall Manager</small></div></div>'+
+        '<ul class="nav">'+enlaces+'</ul>'+
+        '<div class="pie-lateral"><div class="usuario-actual"><b>'+Utils.escaparHTML(sesionUsuario.nombre)+'</b>'+badgeRol(sesionUsuario.rol)+'<br>'+Utils.escaparHTML(areaUsuario)+'</div>'+
+          '<button type="button" class="boton boton-texto boton-ancho" data-accion="cerrar-sesion">⏻ Cerrar sesión</button></div>'+
+      '</aside>'+
+      '<main class="contenido">'+
+        '<div class="topbar no-imprimir"><h1>'+(TITULOS_VISTA[EstadoVista.vistaActual] || 'Sistema Código Azul')+'</h1></div>'+
+        '<div class="area-cuerpo">'+this._contenidoVista(sesionUsuario)+'</div>'+
+      '</main>'+
+    '</div>';
+  },
+
+  _contenidoVista(sesionUsuario){
+    const RENDERIZADORES = {
+      'admin-areas': Vista.adminAreas, 'admin-usuarios': Vista.adminUsuarios, 'admin-pacientes': Vista.adminPacientes,
+      'admin-reportes': Vista.adminReportes, 'encargado-llamado': Vista.encargadoLlamado, 'encargado-codigo-azul': Vista.encargadoCodigoAzul,
+      'encargado-pendientes': Vista.encargadoPendientes, 'encargado-paciente': Vista.encargadoPaciente,
+    };
+    const renderizador = RENDERIZADORES[EstadoVista.vistaActual];
+    return renderizador ? renderizador(sesionUsuario) : '<p>Vista no encontrada.</p>';
+  },
+
+  /* ---------- Panel Administrador: Áreas ---------- */
+  adminAreas(){
+    const areas = ControladorAreas.listar();
+    const filas = areas.map(function(a){
+      return '<tr><td>'+Utils.escaparHTML(a.nombre)+'</td><td>'+Utils.escaparHTML(a.ubicacion)+'</td>'+
+        '<td class="acciones-fila">'+
+          '<button type="button" class="boton boton-secundario boton-chico" data-accion="abrir-modal-area" data-id="'+a.id+'">Editar</button>'+
+          '<button type="button" class="boton boton-peligro boton-chico" data-accion="eliminar-area" data-id="'+a.id+'">Eliminar</button>'+
+        '</td></tr>';
+    }).join('');
+    const tabla = areas.length ? '<div class="tabla-contenedor"><table><thead><tr><th>Nombre</th><th>Ubicación</th><th>Acciones</th></tr></thead><tbody>'+filas+'</tbody></table></div>'
+      : '<div class="sin-datos">No hay áreas registradas todavía.</div>';
+    return '<div class="panel"><div class="panel-cabecera"><h2>Áreas y Zonas del Hospital</h2>'+
+      '<button type="button" class="boton boton-primario" data-accion="abrir-modal-area">+ Nueva área</button></div>'+tabla+'</div>';
+  },
+
+  /* ---------- Panel Administrador: Usuarios ---------- */
+  adminUsuarios(){
+    const usuarios = ControladorUsuarios.listar();
+    const filas = usuarios.map(function(u){
+      const area = u.areaId ? ControladorReportes.nombreArea(u.areaId) : '—';
+      return '<tr><td>'+Utils.escaparHTML(u.nombre)+'</td><td>'+Utils.escaparHTML(u.usuario)+'</td><td>'+badgeRol(u.rol)+'</td><td>'+Utils.escaparHTML(area)+'</td>'+
+        '<td class="acciones-fila">'+
+          '<button type="button" class="boton boton-secundario boton-chico" data-accion="abrir-modal-usuario" data-id="'+u.id+'">Editar</button>'+
+          '<button type="button" class="boton boton-peligro boton-chico" data-accion="eliminar-usuario" data-id="'+u.id+'">Eliminar</button>'+
+        '</td></tr>';
+    }).join('');
+    const tabla = usuarios.length ? '<div class="tabla-contenedor"><table><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Área</th><th>Acciones</th></tr></thead><tbody>'+filas+'</tbody></table></div>'
+      : '<div class="sin-datos">No hay usuarios registrados todavía.</div>';
+    return '<div class="panel"><div class="panel-cabecera"><h2>Usuarios del Sistema</h2>'+
+      '<button type="button" class="boton boton-primario" data-accion="abrir-modal-usuario">+ Nuevo usuario</button></div>'+tabla+'</div>';
+  },
+
+  /* ---------- Panel Administrador: Pacientes ---------- */
+  adminPacientes(){
+    const pacientes = ControladorPacientes.listar();
+    const filas = pacientes.map(function(p){
+      const edad = Utils.calcularEdad(p.fechaNacimiento);
+      return '<tr><td>'+Utils.escaparHTML(p.nombre)+'</td><td>'+Utils.escaparHTML(p.dni)+'</td><td>'+(edad===null?'—':edad+' años')+'</td>'+
+        '<td>'+Utils.escaparHTML(ControladorReportes.nombreArea(p.areaId))+'</td>'+
+        '<td class="acciones-fila">'+
+          '<button type="button" class="boton boton-secundario boton-chico" data-accion="abrir-modal-paciente" data-id="'+p.id+'">Editar</button>'+
+        '</td></tr>';
+    }).join('');
+    const tabla = pacientes.length ? '<div class="tabla-contenedor"><table><thead><tr><th>Nombre</th><th>DNI</th><th>Edad</th><th>Área</th><th>Acciones</th></tr></thead><tbody>'+filas+'</tbody></table></div>'
+      : '<div class="sin-datos">No hay pacientes registrados todavía.</div>';
+    return '<div class="panel"><div class="panel-cabecera"><h2>Fichas de Pacientes</h2>'+
+      '<button type="button" class="boton boton-primario" data-accion="abrir-modal-paciente">+ Nuevo paciente</button></div>'+tabla+'</div>';
+  },
+
+  /* ---------- Panel Administrador: Reportes ---------- */
+  adminReportes(sesionUsuario){
+    const filtros = EstadoVista.filtrosReportes;
+    const areas = ControladorAreas.listar();
+    const estadisticas = ControladorReportes.generarEstadisticas(filtros);
+    EstadoVista.ultimosResultadosReportes = estadisticas;
+    const opcionesArea = areas.map(function(a){
+      return '<option value="'+a.id+'"'+(filtros.areaId===a.id?' selected':'')+'>'+Utils.escaparHTML(a.nombre)+'</option>';
+    }).join('');
+    const integridad = Repositorio.verificarIntegridad();
+
+    const filasTabla = estadisticas.llamados.slice().reverse().slice(0,25).map(function(l){
+      return '<tr><td>'+Utils.formatearFechaHora(l.fechaHora)+'</td><td>'+Utils.escaparHTML(ControladorReportes.nombreArea(l.areaId))+'</td>'+
+        '<td>'+badgeTipoLlamado(l.tipo)+'</td><td>'+Utils.escaparHTML(l.origen)+'</td><td>'+badgeEstadoLlamado(l.estado)+'</td>'+
+        '<td>'+(l.tiempoRespuesta===null?'—':l.tiempoRespuesta+' min')+'</td></tr>';
+    }).join('');
+    const tablaHTML = estadisticas.llamados.length
+      ? '<div class="tabla-contenedor"><table><thead><tr><th>Fecha y hora</th><th>Área</th><th>Tipo</th><th>Origen</th><th>Estado</th><th>T. respuesta</th></tr></thead><tbody>'+filasTabla+'</tbody></table></div>'
+      : '<div class="sin-datos">No hay llamados que coincidan con los filtros aplicados.</div>';
+
+    return '<div class="panel no-imprimir"><h2>Filtrar reportes</h2>'+
+      '<form data-accion-submit="aplicar-filtros-reportes" novalidate><div class="barra-filtros">'+
+        '<div class="campo"><label>Área</label><select name="areaId"><option value="">Todas</option>'+opcionesArea+'</select></div>'+
+        '<div class="campo"><label>Origen</label><select name="origen"><option value="">Todos</option>'+
+          ORIGENES_LLAMADO.map(function(o){ return '<option value="'+o+'"'+(filtros.origen===o?' selected':'')+'>'+o+'</option>'; }).join('')+'</select></div>'+
+        '<div class="campo"><label>Tipo</label><select name="tipo"><option value="">Todos</option>'+
+          TIPOS_LLAMADO.map(function(t){ return '<option value="'+t+'"'+(filtros.tipo===t?' selected':'')+'>'+t+'</option>'; }).join('')+'</select></div>'+
+        '<div class="campo"><label>Desde</label><input type="date" name="desde" value="'+filtros.desde+'"></div>'+
+        '<div class="campo"><label>Hasta</label><input type="date" name="hasta" value="'+filtros.hasta+'"></div>'+
+        '<button type="submit" class="boton boton-primario">Aplicar filtros</button>'+
+      '</div></form></div>'+
+
+      '<div id="reporte-imprimible">'+
+      '<div class="grilla-tarjetas">'+
+        '<div class="tarjeta-metrica"><div class="valor">'+estadisticas.total+'</div><div class="etiqueta">Llamados totales</div></div>'+
+        '<div class="tarjeta-metrica"><div class="valor">'+estadisticas.atendidos+'</div><div class="etiqueta">Atendidos</div></div>'+
+        '<div class="tarjeta-metrica"><div class="valor">'+estadisticas.pendientes+'</div><div class="etiqueta">No atendidos</div></div>'+
+        '<div class="tarjeta-metrica"><div class="valor">'+estadisticas.tiempoPromedioRespuesta+' min</div><div class="etiqueta">Tiempo prom. respuesta</div></div>'+
+      '</div>'+
+      '<div class="grilla-graficos">'+
+        '<div class="panel"><h3>Llamados por área</h3>'+Graficos.renderBarras(estadisticas.porArea)+'</div>'+
+        '<div class="panel"><h3>Llamados por tipo</h3>'+Graficos.renderTorta(estadisticas.porTipo)+'</div>'+
+      '</div>'+
+      '<div class="panel"><h3>Llamados por día</h3>'+Graficos.renderLineas(estadisticas.porDia)+'</div>'+
+      '<div class="panel"><div class="panel-cabecera"><h3>Detalle de llamados filtrados</h3>'+
+        '<div class="acciones-fila no-imprimir">'+
+          '<button type="button" class="boton boton-secundario boton-chico" data-accion="exportar-csv">⬇ Exportar CSV</button>'+
+          '<button type="button" class="boton boton-secundario boton-chico" data-accion="exportar-pdf">🖨 Exportar PDF</button>'+
+        '</div></div>'+tablaHTML+'</div>'+
+      '</div>'+
+
+      '<div class="estado-sistema no-imprimir"><span class="punto-ok"></span> Integridad de datos: '+integridad.cantidadOk+'/'+integridad.total+' tablas inicializadas correctamente (sin bases nulas).</div>';
+  },
+
+  /* ---------- Panel Encargado: Registrar Llamado ---------- */
+  encargadoLlamado(sesionUsuario){
+    const pacientesArea = ControladorPacientes.listarPorArea(sesionUsuario.areaId);
+    const opcionesPaciente = pacientesArea.map(function(p){ return '<option value="'+p.id+'">'+Utils.escaparHTML(p.nombre)+'</option>'; }).join('');
+    return '<div class="panel formulario-ancho">'+
+      '<p class="texto-sec texto-chico">Área: <b>'+Utils.escaparHTML(ControladorReportes.nombreArea(sesionUsuario.areaId))+'</b> · Carga manual posterior al hecho, sin activación automática.</p>'+
+      '<form data-accion-submit="enviar-llamado" novalidate>'+
+        '<div class="fila-campos">'+
+          '<div class="campo"><label>Fecha y hora</label><input type="datetime-local" name="fechaHora" value="'+Utils.ahoraDatetimeLocal()+'" required></div>'+
+          '<div class="campo"><label>Tipo de llamado</label><select name="tipo" required>'+
+            TIPOS_LLAMADO.map(function(t){ return '<option value="'+t+'">'+t+'</option>'; }).join('')+'</select></div>'+
+        '</div>'+
+        '<div class="fila-campos">'+
+          '<div class="campo"><label>Origen</label><select name="origen" required>'+
+            ORIGENES_LLAMADO.map(function(o){ return '<option value="'+o+'">'+o+'</option>'; }).join('')+'</select></div>'+
+          '<div class="campo"><label>Paciente (opcional)</label><select name="pacienteId"><option value="">— No especificado —</option>'+opcionesPaciente+'</select></div>'+
+        '</div>'+
+        '<div class="campo"><label>Personal interviniente</label><input type="text" name="personalInterviniente" placeholder="Ej: Enf. Torres" required></div>'+
+        '<div class="campo"><label>Observaciones</label><textarea name="observaciones" placeholder="Detalle adicional del llamado (opcional)"></textarea></div>'+
+        '<button type="submit" class="boton boton-primario">Registrar llamado</button>'+
+      '</form></div>';
+  },
+
+  /* ---------- Panel Encargado: Ficha de Código Azul ---------- */
+  encargadoCodigoAzul(sesionUsuario){
+    const pacientesArea = ControladorPacientes.listarPorArea(sesionUsuario.areaId);
+    const opcionesPaciente = pacientesArea.map(function(p){ return '<option value="'+p.id+'">'+Utils.escaparHTML(p.nombre)+'</option>'; }).join('');
+    const llamadosArea = ControladorLlamados.listarPorArea(sesionUsuario.areaId).slice().reverse().slice(0,15);
+    const opcionesLlamado = llamadosArea.map(function(l){
+      return '<option value="'+l.id+'">'+Utils.formatearFechaHora(l.fechaHora)+' · '+l.tipo+'</option>';
+    }).join('');
+    return '<div class="panel formulario-ancho">'+
+      '<p class="texto-sec texto-chico">Área: <b>'+Utils.escaparHTML(ControladorReportes.nombreArea(sesionUsuario.areaId))+'</b> · Registro posterior al evento, carga 100% manual.</p>'+
+      '<form data-accion-submit="enviar-codigo-azul" novalidate>'+
+        '<div class="fila-campos">'+
+          '<div class="campo"><label>Fecha y hora del evento</label><input type="datetime-local" name="fechaHora" value="'+Utils.ahoraDatetimeLocal()+'" required></div>'+
+          '<div class="campo"><label>Hora de llegada del equipo</label><input type="datetime-local" name="horaLlegadaEquipo" value="'+Utils.ahoraDatetimeLocal()+'" required></div>'+
+        '</div>'+
+        '<div class="fila-campos">'+
+          '<div class="campo"><label>Paciente</label><select name="pacienteId" required><option value="">Seleccionar…</option>'+opcionesPaciente+'</select></div>'+
+          '<div class="campo"><label>Llamado de origen (opcional)</label><select name="llamadoOrigenId"><option value="">— Ninguno —</option>'+opcionesLlamado+'</select></div>'+
+        '</div>'+
+        '<div class="campo"><label>Personal interviniente</label><input type="text" name="personalInterviniente" placeholder="Ej: Equipo de Reanimación A" required></div>'+
+        '<div class="campo"><label>Intervención realizada</label><textarea name="intervencionRealizada" placeholder="Describa la intervención" required></textarea></div>'+
+        '<div class="campo"><label>Resultado</label><select name="resultado" required>'+
+          RESULTADOS_CODIGO_AZUL.map(function(r){ return '<option value="'+r+'">'+r+'</option>'; }).join('')+'</select></div>'+
+        '<div class="campo"><label>Observaciones</label><textarea name="observaciones" placeholder="Detalle adicional (opcional)"></textarea></div>'+
+        '<button type="submit" class="boton boton-peligro">Registrar ficha de Código Azul</button>'+
+      '</form></div>';
+  },
+
+  /* ---------- Panel Encargado: Atender llamados pendientes ---------- */
+  encargadoPendientes(sesionUsuario){
+    const pendientes = ControladorLlamados.listarPendientesPorArea(sesionUsuario.areaId);
+    const filas = pendientes.map(function(l){
+      return '<tr><td>'+Utils.formatearFechaHora(l.fechaHora)+'</td><td>'+badgeTipoLlamado(l.tipo)+'</td><td>'+Utils.escaparHTML(l.origen)+'</td>'+
+        '<td>'+Utils.escaparHTML(l.personalInterviniente)+'</td>'+
+        '<td><button type="button" class="boton boton-exito boton-chico" data-accion="marcar-atendido" data-id="'+l.id+'">Marcar atendido</button></td></tr>';
+    }).join('');
+    const tabla = pendientes.length ? '<div class="tabla-contenedor"><table><thead><tr><th>Fecha y hora</th><th>Tipo</th><th>Origen</th><th>Personal</th><th>Acción</th></tr></thead><tbody>'+filas+'</tbody></table></div>'
+      : '<div class="sin-datos">No hay llamados pendientes en su área. 🎉</div>';
+    return '<div class="panel"><h2>Llamados Pendientes — '+Utils.escaparHTML(ControladorReportes.nombreArea(sesionUsuario.areaId))+'</h2>'+tabla+'</div>';
+  },
+
+  /* ---------- Panel Encargado: Consultar ficha de paciente ---------- */
+  encargadoPaciente(){
+    const resultados = ControladorPacientes.buscar(EstadoVista.busquedaPaciente);
+    const tarjetas = resultados.map(function(p){
+      const edad = Utils.calcularEdad(p.fechaNacimiento);
+      return '<div class="panel"><h3>'+Utils.escaparHTML(p.nombre)+'</h3>'+
+        '<p class="texto-chico texto-sec">DNI '+Utils.escaparHTML(p.dni)+' · '+(edad===null?'Edad no disponible':edad+' años')+' · Área: '+Utils.escaparHTML(ControladorReportes.nombreArea(p.areaId))+'</p>'+
+        '<p>'+(p.datosMedicos ? Utils.escaparHTML(p.datosMedicos) : '<span class="texto-sec">Sin datos médicos cargados.</span>')+'</p></div>';
+    }).join('');
+    const listado = resultados.length ? tarjetas : '<div class="sin-datos">No se encontraron pacientes con ese criterio de búsqueda.</div>';
+    return '<div class="panel"><form data-accion-submit="buscar-paciente" novalidate><div class="barra-filtros">'+
+        '<div class="campo"><label>Buscar por nombre o DNI</label><input type="text" name="busqueda" value="'+Utils.escaparHTML(EstadoVista.busquedaPaciente)+'" placeholder="Ej: Carlos o 30123456"></div>'+
+        '<button type="submit" class="boton boton-primario">Buscar</button>'+
+      '</div></form></div>'+listado;
+  },
+
+  /* ---------- Modales de alta/edición ---------- */
+  modal(sesionUsuario){
+    const CONSTRUCTORES = {
+      area: Vista._modalArea, usuario: Vista._modalUsuario, paciente: Vista._modalPaciente,
+    };
+    const constructor = CONSTRUCTORES[EstadoVista.modal.tipo];
+    const cuerpo = constructor ? constructor(sesionUsuario) : '';
+    return '<div class="fondo-modal" data-accion="cerrar-modal-fondo">'+
+      '<div class="modal">'+cuerpo+'</div></div>';
+  },
+
+  _modalArea(){
+    const idExistente = EstadoVista.modal.idExistente;
+    const area = idExistente ? Repositorio.buscarPorId(CLAVES_TABLA.AREAS, idExistente) : { nombre:'', ubicacion:'' };
+    return '<div class="modal-cabecera"><h3>'+(idExistente?'Editar área':'Nueva área')+'</h3>'+
+      '<button type="button" class="boton boton-texto" data-accion="cerrar-modal">✕</button></div>'+
+      '<form data-accion-submit="guardar-area" data-id="'+(idExistente||'')+'" novalidate>'+
+        '<div class="campo"><label>Nombre del área</label><input type="text" name="nombre" value="'+Utils.escaparHTML(area.nombre)+'" required></div>'+
+        '<div class="campo"><label>Ubicación física</label><input type="text" name="ubicacion" value="'+Utils.escaparHTML(area.ubicacion)+'" required></div>'+
+        '<button type="submit" class="boton boton-primario boton-ancho">Guardar</button>'+
+      '</form>';
+  },
+
+  _modalUsuario(){
+    const idExistente = EstadoVista.modal.idExistente;
+    const usuario = idExistente ? Repositorio.buscarPorId(CLAVES_TABLA.USUARIOS, idExistente) : { nombre:'', usuario:'', rol:ROLES.ENCARGADO, areaId:'' };
+    const areas = ControladorAreas.listar();
+    const opcionesArea = areas.map(function(a){
+      return '<option value="'+a.id+'"'+(usuario.areaId===a.id?' selected':'')+'>'+Utils.escaparHTML(a.nombre)+'</option>';
+    }).join('');
+    const esEncargado = usuario.rol === ROLES.ENCARGADO;
+    return '<div class="modal-cabecera"><h3>'+(idExistente?'Editar usuario':'Nuevo usuario')+'</h3>'+
+      '<button type="button" class="boton boton-texto" data-accion="cerrar-modal">✕</button></div>'+
+      '<form data-accion-submit="guardar-usuario" data-id="'+(idExistente||'')+'" novalidate>'+
+        '<div class="campo"><label>Nombre completo</label><input type="text" name="nombre" value="'+Utils.escaparHTML(usuario.nombre)+'" required></div>'+
+        '<div class="campo"><label>Usuario de acceso</label><input type="text" name="usuario" value="'+Utils.escaparHTML(usuario.usuario)+'" required></div>'+
+        '<div class="campo"><label>Contraseña'+(idExistente?' (dejar vacío para no cambiar)':'')+'</label><input type="password" name="clave" autocomplete="new-password"></div>'+
+        '<div class="campo"><label>Rol</label><select name="rol" id="campo-rol-modal">'+
+          '<option value="'+ROLES.ADMIN+'"'+(!esEncargado?' selected':'')+'>Administrador</option>'+
+          '<option value="'+ROLES.ENCARGADO+'"'+(esEncargado?' selected':'')+'>Encargado de Área</option></select></div>'+
+        '<div class="campo" id="campo-area-modal" style="'+(esEncargado?'':'display:none;')+'"><label>Área asignada</label>'+
+          '<select name="areaId">'+opcionesArea+'</select></div>'+
+        '<button type="submit" class="boton boton-primario boton-ancho">Guardar</button>'+
+      '</form>';
+  },
+
+  _modalPaciente(){
+    const idExistente = EstadoVista.modal.idExistente;
+    const paciente = idExistente ? Repositorio.buscarPorId(CLAVES_TABLA.PACIENTES, idExistente) : { nombre:'', dni:'', fechaNacimiento:'', datosMedicos:'', areaId:'' };
+    const areas = ControladorAreas.listar();
+    const opcionesArea = areas.map(function(a){
+      return '<option value="'+a.id+'"'+(paciente.areaId===a.id?' selected':'')+'>'+Utils.escaparHTML(a.nombre)+'</option>';
+    }).join('');
+    return '<div class="modal-cabecera"><h3>'+(idExistente?'Editar paciente':'Nuevo paciente')+'</h3>'+
+      '<button type="button" class="boton boton-texto" data-accion="cerrar-modal">✕</button></div>'+
+      '<form data-accion-submit="guardar-paciente" data-id="'+(idExistente||'')+'" novalidate>'+
+        '<div class="campo"><label>Nombre completo</label><input type="text" name="nombre" value="'+Utils.escaparHTML(paciente.nombre)+'" required></div>'+
+        '<div class="fila-campos">'+
+          '<div class="campo"><label>DNI</label><input type="text" name="dni" value="'+Utils.escaparHTML(paciente.dni)+'" required></div>'+
+          '<div class="campo"><label>Fecha de nacimiento</label><input type="date" name="fechaNacimiento" value="'+paciente.fechaNacimiento+'" required></div>'+
+        '</div>'+
+        '<div class="campo"><label>Área asignada</label><select name="areaId" required><option value="">Seleccionar…</option>'+opcionesArea+'</select></div>'+
+        '<div class="campo"><label>Datos médicos relevantes</label><textarea name="datosMedicos">'+Utils.escaparHTML(paciente.datosMedicos)+'</textarea></div>'+
+        '<button type="submit" class="boton boton-primario boton-ancho">Guardar</button>'+
+      '</form>';
+  },
+};
+
+/* ============================================================
+   11. TOASTS — notificaciones no intrusivas
+   ============================================================ */
+function mostrarToast(mensaje, tipo){
+  const contenedor = document.getElementById('contenedor-toast');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + (tipo === 'error' ? 'toast-error' : 'toast-exito');
+  toast.textContent = mensaje;
+  contenedor.appendChild(toast);
+  setTimeout(function(){ toast.remove(); }, 3200);
+}
+
+/* ============================================================
+   12. ACCIONES — dispatcher de eventos delegados (data-accion)
+      Cada acción es una función pequeña: lee el formulario/dataset,
+      llama al controlador correspondiente y actualiza la vista.
+   ============================================================ */
+function leerFormulario(formulario){
+  const datos = {};
+  new FormData(formulario).forEach(function(valor, clave){ datos[clave] = typeof valor === 'string' ? valor.trim() : valor; });
+  return datos;
+}
+function mostrarErrores(errores){
+  mostrarToast(errores[0] + (errores.length > 1 ? ' (y ' + (errores.length - 1) + ' error(es) más)' : ''), 'error');
+}
+function cerrarModalYRenderizar(){
+  EstadoVista.modal = null;
+  Vista.render();
+}
+
+const ACCIONES = {
+  'enviar-login': function(elemento, evento){
+    evento.preventDefault();
+    const datos = leerFormulario(evento.target);
+    const resultado = ControladorAuth.autenticar(datos.usuario, datos.clave);
+    if(!resultado.ok){ EstadoVista.errorLogin = resultado.mensaje; Vista.render(); return; }
+    EstadoVista.errorLogin = '';
+    EstadoVista.vistaActual = 'raiz';
+    Vista.render();
+  },
+  'cerrar-sesion': function(){
+    ControladorAuth.cerrarSesion();
+    Vista.render();
+  },
+  'cambiar-vista': function(elemento){
+    EstadoVista.vistaActual = elemento.dataset.vista;
+    Vista.render();
+  },
+
+  'abrir-modal-area': function(elemento){
+    EstadoVista.modal = { tipo:'area', idExistente: elemento.dataset.id || null };
+    Vista.render();
+  },
+  'guardar-area': function(elemento, evento){
+    evento.preventDefault();
+    const idExistente = evento.target.dataset.id || null;
+    const resultado = ControladorAreas.guardar(leerFormulario(evento.target), idExistente);
+    if(!resultado.ok){ mostrarErrores(resultado.errores); return; }
+    mostrarToast(resultado.esNuevo ? 'Área creada correctamente.' : 'Área actualizada correctamente.', 'exito');
+    cerrarModalYRenderizar();
+  },
+  'eliminar-area': function(elemento){
+    const confirmado = confirm('¿Eliminar esta área? Esta acción no se puede deshacer.');
+    if(!confirmado) return;
+    const resultado = ControladorAreas.eliminar(elemento.dataset.id);
+    if(!resultado.ok){ mostrarToast(resultado.mensaje, 'error'); return; }
+    mostrarToast('Área eliminada.', 'exito');
+    Vista.render();
+  },
+
+  'abrir-modal-usuario': function(elemento){
+    EstadoVista.modal = { tipo:'usuario', idExistente: elemento.dataset.id || null };
+    Vista.render();
+  },
+  'guardar-usuario': function(elemento, evento){
+    evento.preventDefault();
+    const idExistente = evento.target.dataset.id || null;
+    const resultado = ControladorUsuarios.guardar(leerFormulario(evento.target), idExistente);
+    if(!resultado.ok){ mostrarErrores(resultado.errores); return; }
+    mostrarToast(resultado.esNuevo ? 'Usuario creado correctamente.' : 'Usuario actualizado correctamente.', 'exito');
+    cerrarModalYRenderizar();
+  },
+  'eliminar-usuario': function(elemento){
+    const confirmado = confirm('¿Eliminar este usuario?');
+    if(!confirmado) return;
+    const resultado = ControladorUsuarios.eliminar(elemento.dataset.id);
+    if(!resultado.ok){ mostrarToast(resultado.mensaje, 'error'); return; }
+    mostrarToast('Usuario eliminado.', 'exito');
+    Vista.render();
+  },
+
+  'abrir-modal-paciente': function(elemento){
+    EstadoVista.modal = { tipo:'paciente', idExistente: elemento.dataset.id || null };
+    Vista.render();
+  },
+  'guardar-paciente': function(elemento, evento){
+    evento.preventDefault();
+    const idExistente = evento.target.dataset.id || null;
+    const resultado = ControladorPacientes.guardar(leerFormulario(evento.target), idExistente);
+    if(!resultado.ok){ mostrarErrores(resultado.errores); return; }
+    mostrarToast(resultado.esNuevo ? 'Paciente registrado correctamente.' : 'Ficha de paciente actualizada.', 'exito');
+    cerrarModalYRenderizar();
+  },
+
+  'cerrar-modal': function(){ cerrarModalYRenderizar(); },
+  'cerrar-modal-fondo': function(elemento, evento){
+    const clicEnFondo = evento.target === elemento;
+    if(clicEnFondo) cerrarModalYRenderizar();
+  },
+
+  'enviar-llamado': function(elemento, evento){
+    evento.preventDefault();
+    const sesion = ControladorAuth.obtenerSesion();
+    const resultado = ControladorLlamados.registrar(leerFormulario(evento.target), sesion.areaId);
+    if(!resultado.ok){ mostrarErrores(resultado.errores); return; }
+    mostrarToast('Llamado registrado correctamente.', 'exito');
+    EstadoVista.vistaActual = 'encargado-pendientes';
+    Vista.render();
+  },
+  'marcar-atendido': function(elemento){
+    const resultado = ControladorLlamados.marcarAtendido(elemento.dataset.id);
+    if(!resultado.ok){ mostrarToast(resultado.mensaje, 'error'); return; }
+    mostrarToast('Llamado marcado como atendido.', 'exito');
+    Vista.render();
+  },
+  'enviar-codigo-azul': function(elemento, evento){
+    evento.preventDefault();
+    const sesion = ControladorAuth.obtenerSesion();
+    const resultado = ControladorCodigoAzul.registrar(leerFormulario(evento.target), sesion.areaId);
+    if(!resultado.ok){ mostrarErrores(resultado.errores); return; }
+    mostrarToast('Ficha de Código Azul registrada correctamente.', 'exito');
+    evento.target.reset();
+    Vista.render();
+  },
+
+  'buscar-paciente': function(elemento, evento){
+    evento.preventDefault();
+    const datos = leerFormulario(evento.target);
+    EstadoVista.busquedaPaciente = datos.busqueda || '';
+    Vista.render();
+  },
+
+  'aplicar-filtros-reportes': function(elemento, evento){
+    evento.preventDefault();
+    EstadoVista.filtrosReportes = leerFormulario(evento.target);
+    Vista.render();
+  },
+  'exportar-csv': function(){
+    const sesion = ControladorAuth.obtenerSesion();
+    ControladorReportes.exportarCSV(EstadoVista.filtrosReportes, sesion.id);
+    mostrarToast('Reporte CSV descargado.', 'exito');
+  },
+  'exportar-pdf': function(){
+    const sesion = ControladorAuth.obtenerSesion();
+    ControladorReportes.registrarGeneracion(sesion.id, 'PDF', EstadoVista.filtrosReportes);
+    window.print();
+  },
+};
+
+function manejarClicApp(evento){
+  const elemento = evento.target.closest('[data-accion]');
+  if(!elemento) return;
+  const accion = ACCIONES[elemento.dataset.accion];
+  if(!accion) return;
+  accion(elemento, evento);
+}
+function manejarSubmitApp(evento){
+  const formulario = evento.target.closest('[data-accion-submit]');
+  if(!formulario) return;
+  const accion = ACCIONES[formulario.dataset.accionSubmit];
+  if(!accion) return;
+  accion(formulario, evento);
+}
+function activarCambioRolUsuario(evento){
+  const esSelectorRol = evento.target && evento.target.id === 'campo-rol-modal';
+  if(!esSelectorRol) return;
+  const grupoArea = document.getElementById('campo-area-modal');
+  const esEncargado = evento.target.value === ROLES.ENCARGADO;
+  grupoArea.style.display = esEncargado ? '' : 'none';
+}
+
+/* ============================================================
+   13. BOOTSTRAP
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', function(){
+  Repositorio.inicializar();
+  document.getElementById('app').addEventListener('click', manejarClicApp);
+  document.getElementById('app').addEventListener('submit', manejarSubmitApp);
+  document.getElementById('contenedor-modal').addEventListener('click', manejarClicApp);
+  document.getElementById('contenedor-modal').addEventListener('submit', manejarSubmitApp);
+  document.getElementById('contenedor-modal').addEventListener('change', activarCambioRolUsuario);
+  Vista.render();
+});
+</script>
+</body>
+</html>
