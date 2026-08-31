@@ -3,6 +3,10 @@
 -- Ejecutar DESPUÉS de codigo_azul_schema.sql
 -- =============================================================================
 USE codigo_azul;
+-- Fuerza el charset de la conexión: sin esto, un cliente ejecutado desde una
+-- shell sin locale UTF-8 (frecuente en contenedores mínimos) puede corromper
+-- literales con tildes/ñ como 'Baño' antes de que lleguen al servidor.
+SET NAMES utf8mb4;
 
 -- 1. Áreas
 INSERT INTO areas (nombre, ubicacion) VALUES
@@ -11,14 +15,17 @@ INSERT INTO areas (nombre, ubicacion) VALUES
   ('Internación General', '3° Piso - Sector C');
 
 -- 2. Usuarios
--- Contraseñas de referencia (hashear con bcrypt/argon2 en la app real):
+-- clave_hash son hashes BCrypt reales (PASSWORD_DEFAULT de PHP), generados
+-- con password_hash() -no SHA2()-, para que backend/ (NativePasswordHasher,
+-- que usa password_hash/password_verify) pueda autenticarlos tal cual.
+-- Contraseñas de referencia:
 --   admin   -> admin123
 --   jperez  -> 1234
 --   mgomez  -> 1234
 INSERT INTO usuarios (nombre, usuario, clave_hash, rol, area_id) VALUES
-  ('Administrador General', 'admin',  SHA2('admin123', 256), 'ADMINISTRADOR', NULL),
-  ('Juan Pérez',            'jperez', SHA2('1234', 256),      'ENCARGADO', (SELECT id FROM areas WHERE nombre = 'Guardia')),
-  ('María Gómez',           'mgomez', SHA2('1234', 256),      'ENCARGADO', (SELECT id FROM areas WHERE nombre = 'Terapia Intensiva'));
+  ('Administrador General', 'admin',  '$2y$12$02VyCjWRLAViKXom9F3sVO9T0RUiCKZ0DyStj5efYrZbHVIT1YkL6', 'ADMINISTRADOR', NULL),
+  ('Juan Pérez',            'jperez', '$2y$12$5R2YfOGcPf.iQe7EbF6nSekWxB3jpFDo6ZMekYDLZu33PAWTshbTK', 'ENCARGADO', (SELECT id FROM areas WHERE nombre = 'Guardia')),
+  ('María Gómez',           'mgomez', '$2y$12$5R2YfOGcPf.iQe7EbF6nSekWxB3jpFDo6ZMekYDLZu33PAWTshbTK', 'ENCARGADO', (SELECT id FROM areas WHERE nombre = 'Terapia Intensiva'));
 
 -- 3. Pacientes
 INSERT INTO pacientes (nombre, dni, fecha_nacimiento, datos_medicos, area_id) VALUES

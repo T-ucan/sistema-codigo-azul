@@ -1,0 +1,11 @@
+# Front Controller: toda peticion que no sea un archivo real pasa por
+# index.php. El document root del vhost debe ser esta carpeta "public/".
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# Nunca servir dotfiles (.env, .git, etc.) si por error terminaran aca.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
