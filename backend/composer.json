@@ -1,0 +1,44 @@
+{
+    "name": "codigo-azul/backend",
+    "description": "Backend del Sistema de Gestion Codigo Azul (HospCall Manager) - arquitectura hexagonal",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "^2.15",
+        "phpmetrics/phpmetrics": "^3.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodigoAzul\\Domain\\": "src/Domain/",
+            "CodigoAzul\\Application\\": "src/Application/",
+            "CodigoAzul\\Infrastructure\\": "src/Infrastructure/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodigoAzul\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "phpmd": "phpmd src text phpmd.xml --suffixes php",
+        "phpmd-html": "phpmd src html phpmd.xml --reportfile var/logs/phpmd.html --suffixes php",
+        "metrics": "phpmetrics --report-html=var/logs/phpmetrics src",
+        "check-db": "php scripts/check-db-integrity.php",
+        "analyze": [
+            "@test",
+            "@phpmd",
+            "@metrics"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": false
+    },
+    "minimum-stability": "RC",
+    "prefer-stable": true
+}

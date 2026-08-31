@@ -64,12 +64,14 @@ CREATE TABLE usuarios (
   updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY uq_usuarios_usuario (usuario),
   KEY idx_usuarios_area (area_id),
-  CONSTRAINT fk_usuarios_area FOREIGN KEY (area_id) REFERENCES areas(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT chk_usuarios_rol_area CHECK (
-    (rol = 'ADMINISTRADOR' AND area_id IS NULL) OR
-    (rol = 'ENCARGADO' AND area_id IS NOT NULL)
-  )
+  CONSTRAINT fk_usuarios_area FOREIGN KEY (area_id) REFERENCES areas(id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- Nota: la regla "rol=ADMINISTRADOR -> area_id NULL, rol=ENCARGADO -> area_id
+-- obligatorio" NO se puede expresar como CHECK: MariaDB (a diferencia de
+-- MySQL 8) rechaza un CHECK que referencie una columna con "ON UPDATE
+-- CASCADE" en su FK (error 1901). Para que el script funcione igual en
+-- MySQL y en MariaDB se aplica con un trigger (ver sección 6), igual que
+-- las otras dos reglas que tampoco podían ser CHECK.
 
 -- =============================================================================
 -- 3. PACIENTE
@@ -166,6 +168,34 @@ CREATE TABLE reportes (
 --    (todo evento es Llamado o CodigoAzul, nunca ambos)
 -- =============================================================================
 DELIMITER $$
+
+CREATE TRIGGER trg_usuarios_bi_rol_area
+BEFORE INSERT ON usuarios
+FOR EACH ROW
+BEGIN
+  IF NEW.rol = 'ADMINISTRADOR' AND NEW.area_id IS NOT NULL THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Un Administrador no debe tener área asignada.';
+  END IF;
+  IF NEW.rol = 'ENCARGADO' AND NEW.area_id IS NULL THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Debe asignar un área a un Encargado de Área.';
+  END IF;
+END$$
+
+CREATE TRIGGER trg_usuarios_bu_rol_area
+BEFORE UPDATE ON usuarios
+FOR EACH ROW
+BEGIN
+  IF NEW.rol = 'ADMINISTRADOR' AND NEW.area_id IS NOT NULL THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Un Administrador no debe tener área asignada.';
+  END IF;
+  IF NEW.rol = 'ENCARGADO' AND NEW.area_id IS NULL THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Debe asignar un área a un Encargado de Área.';
+  END IF;
+END$$
 
 CREATE TRIGGER trg_pacientes_bi_fecha_nacimiento
 BEFORE INSERT ON pacientes
