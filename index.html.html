@@ -320,13 +320,20 @@ const Utils = {
     const esLarga = cadena.length > largoMax;
     return esLarga ? cadena.slice(0, largoMax - 1) + '…' : cadena;
   },
-  hoyISO(){
-    return new Date().toISOString().slice(0,10);
-  },
-  ahoraDatetimeLocal(){
+  ahoraLocal(){
     const fecha = new Date();
     fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset());
-    return fecha.toISOString().slice(0,16);
+    return fecha;
+  },
+  // Fecha/hora "de reloj de pared" en hora local, formateadas como el resto de
+  // los campos fechaHora del sistema (que también son hora local, no UTC).
+  // Usar new Date().toISOString() aquí mezclaría hora local con UTC y generaría
+  // tiempos de respuesta incorrectos (desplazados por el huso horario).
+  hoyISO(){
+    return this.ahoraLocal().toISOString().slice(0,10);
+  },
+  ahoraDatetimeLocal(){
+    return this.ahoraLocal().toISOString().slice(0,16);
   },
   formatearFechaHora(iso){
     if(!iso) return '—';
@@ -606,10 +613,14 @@ const Validador = {
       { valido: claveValida, mensaje:'La contraseña debe tener al menos 4 caracteres.' },
     ]);
   },
-  paciente(datos){
+  paciente(datos, idActual){
+    const dniDuplicado = Repositorio.listar(CLAVES_TABLA.PACIENTES).some(function(p){
+      return p.id !== idActual && p.dni === (datos.dni || '').trim();
+    });
     return this._errores([
       { valido: Utils.normalizarTexto(datos.nombre).length >= 2, mensaje:'El nombre del paciente es obligatorio.' },
       { valido: /^\d{7,8}$/.test(datos.dni || ''), mensaje:'El DNI debe tener entre 7 y 8 dígitos numéricos.' },
+      { valido: !dniDuplicado, mensaje:'Ya existe un paciente registrado con ese DNI.' },
       { valido: !!datos.fechaNacimiento && datos.fechaNacimiento <= Utils.hoyISO(), mensaje:'La fecha de nacimiento no puede ser futura.' },
       { valido: !!datos.areaId, mensaje:'Debe asignar un área al paciente.' },
     ]);
@@ -670,8 +681,10 @@ const ControladorAreas = {
   },
   eliminar(id){
     const enUso = Repositorio.listar(CLAVES_TABLA.PACIENTES).some(function(p){ return p.areaId === id; }) ||
-                  Repositorio.listar(CLAVES_TABLA.USUARIOS).some(function(u){ return u.areaId === id; });
-    if(enUso) return { ok:false, mensaje:'No se puede eliminar: el área tiene pacientes o usuarios asignados.' };
+                  Repositorio.listar(CLAVES_TABLA.USUARIOS).some(function(u){ return u.areaId === id; }) ||
+                  Repositorio.listar(CLAVES_TABLA.LLAMADOS).some(function(l){ return l.areaId === id; }) ||
+                  Repositorio.listar(CLAVES_TABLA.CODIGOS_AZUL).some(function(c){ return c.areaId === id; });
+    if(enUso) return { ok:false, mensaje:'No se puede eliminar: el área tiene pacientes, usuarios o eventos (llamados/códigos azul) asociados.' };
     Repositorio.eliminar(CLAVES_TABLA.AREAS, id);
     return { ok:true };
   },
@@ -718,7 +731,7 @@ const ControladorPacientes = {
   },
   guardar(datos, idExistente){
     const esNuevo = !idExistente;
-    const errores = Validador.paciente(datos);
+    const errores = Validador.paciente(datos, idExistente);
     if(errores.length) return { ok:false, errores };
     const entidad = {
       id: idExistente || Utils.generarId('pac'),
@@ -753,7 +766,7 @@ const ControladorLlamados = {
     const llamado = Repositorio.buscarPorId(CLAVES_TABLA.LLAMADOS, id);
     if(!llamado) return { ok:false, mensaje:'Llamado no encontrado.' };
     llamado.estado = ESTADOS_LLAMADO.ATENDIDO;
-    llamado.tiempoRespuesta = Utils.diferenciaMinutos(llamado.fechaHora, new Date().toISOString().slice(0,16));
+    llamado.tiempoRespuesta = Utils.diferenciaMinutos(llamado.fechaHora, Utils.ahoraDatetimeLocal());
     Repositorio.guardar(CLAVES_TABLA.LLAMADOS, llamado);
     return { ok:true, llamado };
   },
@@ -1230,7 +1243,7 @@ const Vista = {
 
   _modalArea(){
     const idExistente = EstadoVista.modal.idExistente;
-    const area = idExistente ? Repositorio.buscarPorId(CLAVES_TABLA.AREAS, idExistente) : { nombre:'', ubicacion:'' };
+    const area = (idExistente && Repositorio.buscarPorId(CLAVES_TABLA.AREAS, idExistente)) || { nombre:'', ubicacion:'' };
     return '<div class="modal-cabecera"><h3>'+(idExistente?'Editar área':'Nueva área')+'</h3>'+
       '<button type="button" class="boton boton-texto" data-accion="cerrar-modal">✕</button></div>'+
       '<form data-accion-submit="guardar-area" data-id="'+(idExistente||'')+'" novalidate>'+
@@ -1242,7 +1255,7 @@ const Vista = {
 
   _modalUsuario(){
     const idExistente = EstadoVista.modal.idExistente;
-    const usuario = idExistente ? Repositorio.buscarPorId(CLAVES_TABLA.USUARIOS, idExistente) : { nombre:'', usuario:'', rol:ROLES.ENCARGADO, areaId:'' };
+    const usuario = (idExistente && Repositorio.buscarPorId(CLAVES_TABLA.USUARIOS, idExistente)) || { nombre:'', usuario:'', rol:ROLES.ENCARGADO, areaId:'' };
     const areas = ControladorAreas.listar();
     const opcionesArea = areas.map(function(a){
       return '<option value="'+a.id+'"'+(usuario.areaId===a.id?' selected':'')+'>'+Utils.escaparHTML(a.nombre)+'</option>';
@@ -1265,7 +1278,7 @@ const Vista = {
 
   _modalPaciente(){
     const idExistente = EstadoVista.modal.idExistente;
-    const paciente = idExistente ? Repositorio.buscarPorId(CLAVES_TABLA.PACIENTES, idExistente) : { nombre:'', dni:'', fechaNacimiento:'', datosMedicos:'', areaId:'' };
+    const paciente = (idExistente && Repositorio.buscarPorId(CLAVES_TABLA.PACIENTES, idExistente)) || { nombre:'', dni:'', fechaNacimiento:'', datosMedicos:'', areaId:'' };
     const areas = ControladorAreas.listar();
     const opcionesArea = areas.map(function(a){
       return '<option value="'+a.id+'"'+(paciente.areaId===a.id?' selected':'')+'>'+Utils.escaparHTML(a.nombre)+'</option>';
